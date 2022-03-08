@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html class="page" lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="css/style.min.css" />
+    <link
+      rel="preload"
+      href="./fonts/montserrat-v23-latin_cyrillic-regular.woff2"
+      as="font"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="./fonts/montserrat-v23-latin_cyrillic-200.woff2"
+      as="font"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="./fonts/montserrat-v23-latin_cyrillic-600.woff2"
+      as="font"
+      crossorigin
+    />
+    <title>Конвертация</title>
+  </head>
+  <body>
+    <div class="upload">
+      <p class="input-block__label">Прикрепить документ</p>
+      <div class="upload__input-wrap">
+        <label class="upload__label" data-input="0">
+          <input
+            type="file"
+            accept="docx,doc"
+            name="file-0"
+            class="upload__input visually-hidden"
+            multiple
+          />
+          <p class="upload__title">
+            Выберите файл<br />
+            <span>или перетащите его сюда</span>
+          </p>
+          <p class="upload__desc">Файлы .jpg,.png. Макс. размер 5 Мб</p>
+        </label>
+      </div>
+
+      <div class="upload__input-results">
+        <div class="upload__result" data-result="0">
+          <p class="upload__name">Photo.png</p>
+          <button type="button" class="upload__close">
+            <svg class="upload__close-icon" role="img" width="24" height="24">
+              <use xlink:href="img/sprite.svg#icon-close_small"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="preloader"><div class="lds-dual-ring"></div></div>
+      <div class="loader">
+        <div class="lds-dual-ring"></div>
+        <div class="loader__count">
+          <span class="loader__count-label">Файлы:&nbsp;</span>
+          <span class="loader__count-current"></span>/<span
+            class="loader__count-max"
+          ></span>
+          <div class="loader__filename">
+            <span
+              >sdfgsdfgsdfgsdfg sdfg sdfg sdfg sdfg asdf asdf asdf asdfasfdasdf
+              sdfg sdfg sdfg sdfg sdfg
+            </span>
+            <div class="lds-ellipsis">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+        </div>
+        <div class="loader__bar"></div>
+      </div>
+    </div>
+
+    <button class="button" id="button" disabled>Скачать</button>
+
+    <div class="result"></div>
+
+    <script src="js/main.min.js"></script>
+  </body>
+</html>
