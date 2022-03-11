@@ -27,64 +27,111 @@
     <title>Конвертация</title>
   </head>
   <body>
-    <div class="upload">
-      <p class="input-block__label">Прикрепить документ</p>
-      <div class="upload__input-wrap">
-        <label class="upload__label" data-input="0">
-          <input
-            type="file"
-            accept="docx,doc"
-            name="file-0"
-            class="upload__input visually-hidden"
-            multiple
-          />
-          <p class="upload__title">
-            Выберите файл<br />
-            <span>или перетащите его сюда</span>
-          </p>
-          <p class="upload__desc">Файлы .jpg,.png. Макс. размер 5 Мб</p>
-        </label>
-      </div>
+    <div class="upload-page">
+      <div class="container">
+        <div class="upload">
+          <p class="upload__main-title">Загрузка файлов</p>
+          <div class="upload__input-wrap">
+            <label class="upload__label" data-input="0">
+              <input
+                type="file"
+                accept="docx,doc"
+                name="file-0"
+                class="upload__input visually-hidden"
+                multiple
+              />
+              <p class="upload__title">
+                Нажмите, чтобы загрузить файлы или перетащите их сюда
+              </p>
+              <p class="upload__desc">Файлы .docx</p>
+            </label>
+          </div>
 
-      <div class="upload__input-results">
-        <div class="upload__result" data-result="0">
-          <p class="upload__name">Photo.png</p>
-          <button type="button" class="upload__close">
-            <svg class="upload__close-icon" role="img" width="24" height="24">
-              <use xlink:href="img/sprite.svg#icon-close_small"></use>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="preloader"><div class="lds-dual-ring"></div></div>
-      <div class="loader">
-        <div class="lds-dual-ring"></div>
-        <div class="loader__count">
-          <span class="loader__count-label">Файлы:&nbsp;</span>
-          <span class="loader__count-current"></span>/<span
-            class="loader__count-max"
-          ></span>
-          <div class="loader__filename">
-            <span
-              >sdfgsdfgsdfgsdfg sdfg sdfg sdfg sdfg asdf asdf asdf asdfasfdasdf
-              sdfg sdfg sdfg sdfg sdfg
-            </span>
-            <div class="lds-ellipsis">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
+          <div class="upload__input-results">
+            <div class="upload__result" data-result="0">
+              <p class="upload__name">Файлы загружены</p>
+              <button type="button" class="upload__close">
+                <b>Очистить</b>
+                <!-- <svg class="upload__close-icon" role="img" width="24" height="24">
+                  <use xlink:href="img/sprite.svg#icon-close_small"></use>
+                </svg> -->
+              </button>
             </div>
           </div>
+
+          <div class="loader">
+            <div class="lds-dual-ring"></div>
+            <div class="loader__count">
+              <span class="loader__count-label">Файлы:&nbsp;</span>
+              <span class="loader__count-current"></span>/<span
+                class="loader__count-max"
+              ></span>
+              <div class="loader__filename">
+                <span> </span>
+                <div class="lds-ellipsis">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
+            </div>
+            <div class="loader__bar"></div>
+          </div>
         </div>
-        <div class="loader__bar"></div>
+
+        <div class="result-block">
+          <div class="result-block__accessories" style="display: none">
+            <div class="result-block__refnets">
+              <label>
+                <input type="checkbox" name="refnets" />
+                <span>Использовать рефнеты DRQ</span>
+              </label>
+            </div>
+            <!-- <div class="result-block__controllers">
+              <label>
+                <input type="checkbox" name="controllers" />
+                <span>Использовать рефнеты DRQ</span>
+              </label>
+            </div> -->
+            <i>
+              <b>
+                При добавлении новых систем к существующим, проверьте рефнеты,
+                если нужно, отметьте еще раз "галочки"
+              </b>
+            </i>
+          </div>
+          <div class="result-block__radios">
+            <button
+              id="separate-radio"
+              class="result-block__radio-item"
+              disabled
+            >
+              Спец-ия посистемно
+            </button>
+            <button id="total-radio" class="result-block__radio-item" disabled>
+              Общая спец-ия
+            </button>
+          </div>
+          <div class="result-info" style="display: none">
+            <button class="save-button" id="button">Скачать</button>
+            <i>
+              <b>
+                Если в названии систем есть тире с пробелами по бокам (" - ")
+                могут неправильно отображаться названия
+              </b>
+            </i>
+            <div class="result"><table></table></div>
+          </div>
+          <div class="result-total-info" style="display: none">
+            <button class="save-button" id="button-total">Скачать</button>
+            <div class="result-total"><table></table></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <button class="button" id="button" disabled>Скачать</button>
-
-    <div class="result"></div>
+    <div class="preloader"><div class="lds-dual-ring"></div></div>
 
     <script src="js/main.min.js"></script>
   </body>

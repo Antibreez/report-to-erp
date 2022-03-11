@@ -1,5 +1,7 @@
 .upload {
-  width: 328px;
+  min-width: 328px;
+  width: 100%;
+  margin: 0 0 30px;
 
   &__label {
     position: relative;
@@ -36,6 +38,12 @@
       background-repeat: no-repeat;
       background-size: contain;
     }
+  }
+
+  &__main-title {
+    margin: 0 0 20px;
+    font-size: 24px;
+    line-height: 30px;
   }
 
   &__title {
@@ -102,20 +110,32 @@
     position: absolute;
     top: 50%;
     right: 20px;
-    font-size: 0;
-    line-height: 0;
     transform: translateY(-50%);
+    transition: color 0.2s;
+
+    b {
+      display: block;
+      padding: 15px 25px;
+      border: 1px solid $blue;
+    }
 
     svg {
       color: $dark-grey;
-      transition: color 0.2s;
     }
 
-    &:hover svg {
+    &:hover {
       cursor: pointer;
       color: $blue;
     }
   }
+}
+
+.upload__result {
+  padding: 25px 20px;
+}
+
+.upload__input-results {
+  margin-top: 20px;
 }
 
 .upload.disabled {

@@ -1,0 +1,81 @@
+.result-block__radios {
+  margin-bottom: 20px;
+  button {
+    padding: 10px 20px;
+    background-color: #eee;
+    border: none;
+
+    &:not(:disabled):hover {
+      cursor: pointer;
+    }
+
+    &:first-child {
+      margin-right: 20px;
+    }
+
+    &.active {
+      border-bottom: 2px solid #888;
+    }
+  }
+}
+
+.result-block__accessories {
+  margin: 0 0 20px;
+
+  i {
+    display: block;
+    max-width: 600px;
+    font-size: 13px;
+    line-height: 18px;
+    color: red;
+  }
+}
+
+.result-block__refnets {
+  margin: 0 0 10px;
+}
+
+.result-info,
+.result-total-info {
+  .save-button {
+    margin: 0 0 20px;
+    padding: 15px 30px;
+    border: none;
+    background-color: $blue;
+    color: #fff;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.result-info {
+  i {
+    display: block;
+    margin: 0 0 15px;
+    max-width: 500px;
+    font-size: 13px;
+    line-height: 18px;
+    color: red;
+  }
+}
+
+.result,
+.result-total {
+  table {
+    border-collapse: collapse;
+
+    td {
+      border: 1px solid #555;
+    }
+
+    p {
+      min-width: 50px;
+      margin: 0;
+      padding: 3px 10px;
+      font-size: 13px;
+      line-height: 15px;
+    }
+  }
+}

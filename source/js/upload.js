@@ -1,105 +1,14 @@
+import { loader } from "./fileLoader";
+import { makeTotalTable } from "./totalTable";
+import quantityInputEventListeners from "./quantityInputEventListeners";
+import { getTablesFromDoc, makeSeparateTable } from "./separateTable";
+import { totalSystems } from "./globalData";
+import { resultLabel } from "./resultLabel";
+import { dropdownEvents } from "./dropdownEvents";
+
 const uploads = document.querySelectorAll(".upload");
 
-$loader = $(".loader");
-$loaderBar = $loader.find(".loader__bar");
-$loaderCountCurrent = $loader.find(".loader__count-current");
-$loaderCountMax = $loader.find(".loader__count-max");
-$loaderCurrentName = $loader.find(".loader__filename span");
-
-$("#button").on("click", function () {
-  $(".result table").table2excel();
-});
-
-function preventDefaults(e) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
-function highlight(e) {
-  e.currentTarget.classList.add("highlight");
-}
-
-function unhighlight(e) {
-  e.currentTarget.classList.remove("highlight");
-}
-
-function getResultBlock(input) {
-  const $idx = $(input).parent().attr("data-input");
-  return $(input)
-    .parents(".upload")
-    .find("[data-result='" + $idx + "']");
-}
-
-function fillResult(input) {
-  const $result = getResultBlock(input);
-  const $name = $result.find(".upload__name");
-  $name.text("Файлы загружены");
-}
-
-function showResult(input) {
-  const $result = getResultBlock(input);
-  $result.addClass("show");
-}
-
-function hideResult(input) {
-  const $result = getResultBlock(input);
-  $result.removeClass("show");
-}
-
-function showLabel(input) {
-  const $label = $(input).parent();
-  $label.removeClass("hidden");
-}
-
-function hideLabel(input) {
-  const $label = $(input).parent();
-  $label.addClass("hidden");
-}
-
-function addLoader(files) {
-  for (let i = 0; i < files.length; i++) {
-    $loaderBar.append($("<div></div>"));
-  }
-  $loaderCountCurrent.text(0);
-  $loaderCountMax.text(files.length);
-  setLoaderName(files[0]);
-  $loader.addClass("shown");
-}
-
-function setLoaderName(file) {
-  $loaderCurrentName.text(file.name);
-}
-
-function setLoaderStage(num) {
-  $loaderBar.find("div").eq(num).addClass("active");
-  $loaderCountCurrent.text(num + 1);
-}
-
-function removeLoader() {
-  $loader.removeClass("shown");
-  $loaderBar.html("");
-  $loaderCountCurrent.text("");
-  $loaderCountMax.text("");
-  $loaderCurrentName.text("");
-}
-
-function getUsefullPart($el) {
-  const ru1 = "Информация о хладагенте";
-  const ru2 = "Схемы фреонопроводов";
-  const en1 = "Refrigerant information";
-  const en2 = "Piping diagrams";
-
-  const $refRu = $el.find(`h2:contains(${ru1})`);
-  const $refEn = $el.find(`h2:contains(${en1})`);
-
-  if ($refRu.length === 0 && $refEn.length === 0) return null;
-
-  return $el
-    .find(`h2:contains(${$refRu.length > 0 ? ru1 : en1})`)
-    .next("table")
-    .nextUntil(`h1:contains(${$refRu.length > 0 ? ru2 : en2})`);
-}
-
+////FUNCTION FOR MULTIFILES INPUT
 function readmultifiles(input, files) {
   var reader = new FileReader();
 
@@ -111,15 +20,11 @@ function readmultifiles(input, files) {
     reader.onloadstart = function (e) {
       if (index === 0) {
         console.log("load started");
-        addLoader(files);
+        loader.add(files);
       }
     };
 
-    reader.onprogress = function (e) {
-      console.log("load in progress");
-      console.log(e.loaded);
-      console.log(e);
-    };
+    reader.onprogress = function (e) {};
 
     reader.onload = function (e) {
       const result = mammoth
@@ -127,43 +32,59 @@ function readmultifiles(input, files) {
           arrayBuffer: reader.result,
         })
         .then((res) => {
+          //get converted to html document
           const $doc = $("<div></div>");
           $doc.append(res.value);
 
-          //const $totalTableFromDoc = $doc.find("table").first();
-          const usefullPart = getUsefullPart($doc);
+          //take usefull part from converted document
+          //const usefullPart = getUsefullPart($doc);
+          const resultTables = getTablesFromDoc($doc);
 
-          if (usefullPart === null) {
+          //throw error if no success
+          if (!resultTables) {
             alert(`
 Ошибка!
-Несоответствие содержимого файла:
+Файл не содержит систем:
 "${file.name}"
             `);
-            removeLoader();
-            $("#button").removeAttr("disabled");
+            loader.remove();
+            //$("#button").removeAttr("disabled");
             $(".upload__close").trigger("click");
             return;
           }
 
-          const $tables = $("<div></div>").append(usefullPart);
+          //take tables from usefull part
+          //const $tables = $("<div></div>").append(usefullPart);
+          //make proper format of tables for render
+          //const currentTables = getTablesFromDoc(usefullPart);
 
-          console.log($tables[0]);
-          $(".result").append(makeTable($tables));
+          //render detailed and total tables
+          //$(".result table").append(resultTables);
+          makeSeparateTable(resultTables);
 
+          //render currently loading file name
           if (index < files.length - 1) {
-            setLoaderName(files[index + 1]);
+            loader.setFileName(files[index + 1]);
           }
 
-          setLoaderStage(index);
+          //render files quantity progress
+          loader.setStage(index);
 
+          //on files loading finish
           if (index === files.length - 1) {
-            hideLabel(input);
-            fillResult(input);
-            showResult(input);
-            $("#button").removeAttr("disabled");
+            resultLabel.show();
+
+            $(".result-block__radios button").removeAttr("disabled");
+            $(".result-block__radios button").first().addClass("active");
+            $(".result-info").show();
+            $(".result-block__accessories").show();
+
+            makeTotalTable();
+
+            quantityInputEventListeners.add();
 
             setTimeout(() => {
-              removeLoader();
+              loader.remove();
             }, 1000);
           }
 
@@ -177,52 +98,19 @@ function readmultifiles(input, files) {
   readFile(0);
 }
 
+////READ INPUT FILES
 const readUrl = (input) => {
-  console.log(input.files.length);
-
   if (input.files && input.files[0]) {
     readmultifiles(input, input.files);
   }
 };
 
-////////////////////////////
-function makeTable($tables) {
-  const $newTable = $("<table></table>");
-
-  $tables.find("table").each((idx, item) => {
-    const title = $(item).prev().text();
-    $(item)
-      .find("tr")
-      .each((i, row) => {
-        if (i === 0) return;
-
-        const $cells = $(row).find("td");
-        $cells.eq(2).remove();
-        $("<td></td>").insertAfter($cells.first());
-
-        const $newCell = $("<td></td>");
-
-        if (i === 1) {
-          $newCell.text(title);
-        }
-
-        $(row).prepend($newCell);
-        $newTable.append($(row));
-      });
-  });
-
-  return $newTable;
-}
-
+///FILE CHANGE HANDLER
 const onFileChange = (e) => {
   readUrl(e.currentTarget);
-  console.log(e.currentTarget);
 };
 
-function onFileDrop(input) {
-  readUrl(input);
-}
-
+////FILE DROP HANDLER
 function handleDrop(e) {
   let dt = e.dataTransfer;
   let files = dt.files;
@@ -240,53 +128,50 @@ function handleDrop(e) {
   }
 
   input.files = files;
-  onFileDrop(input);
+  readUrl(input);
 }
 
+////CLEAR ALL FIELDS HANDLER
 function onFileClear(e) {
-  const $target = $(e.currentTarget);
-  const $result = $target.parents(".upload__result");
-  const $idx = $result.attr("data-result");
-  const $label = $result.parents(".upload").find("[data-input='" + $idx + "']");
-  const input = $label.children("input")[0];
+  $(".upload__label input").value = "";
 
-  const $block = $target.parents(".upload");
-
-  if ($block.hasClass("multi")) {
-    setIds($result, $idx);
-
-    $result.remove();
-    $label.remove();
-  } else {
-    input.value = "";
-
-    if (!/safari/i.test(navigator.userAgent)) {
-      input.type = "";
-      input.type = "file";
-    }
-
-    $label.removeClass("hidden");
-    $result.removeClass("show");
-    $("#button").attr("disabled", true);
-    $(".result").html("");
+  if (!/safari/i.test(navigator.userAgent)) {
+    input.type = "";
+    input.type = "file";
   }
+
+  quantityInputEventListeners.remove();
+
+  resultLabel.hide();
+
+  $(".result-block__radios button").attr("disabled", "true");
+  $(".result-block__radios button").first().removeClass("active");
+  $(".result-block__radios button").last().removeClass("active");
+  $(".result-info").hide();
+  $(".result-total-info").hide();
+  $(".result-block__accessories").hide();
+
+  $(".result table").html("");
+  $(".result-total table").html("");
+  totalSystems.reset();
 }
 
+////ALL EVENT LISTENERS
 function addEventListeners($inputLabel, $result) {
   const input = $inputLabel.children("input")[0];
   const inputLabel = $inputLabel[0];
   const fileClearBtn = $result.find(".upload__close")[0];
 
   ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
-    inputLabel.addEventListener(eventName, preventDefaults, false);
+    inputLabel.addEventListener(eventName, dropdownEvents.prevent, false);
   });
 
   ["dragenter", "dragover"].forEach((eventName) => {
-    inputLabel.addEventListener(eventName, highlight, false);
+    inputLabel.addEventListener(eventName, dropdownEvents.highlight, false);
   });
 
   ["dragleave", "drop"].forEach((eventName) => {
-    inputLabel.addEventListener(eventName, unhighlight, false);
+    inputLabel.addEventListener(eventName, dropdownEvents.unhighlight, false);
   });
 
   inputLabel.addEventListener("drop", handleDrop, false);
@@ -294,6 +179,7 @@ function addEventListeners($inputLabel, $result) {
   fileClearBtn.addEventListener("click", onFileClear);
 }
 
+////ADD EVENT LISTENERS
 uploads.forEach(function (upload) {
   const $inputLabel = $(upload).find(".upload__label");
   const $result = $(upload).find(".upload__result");
