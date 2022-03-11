@@ -133,11 +133,13 @@ function handleDrop(e) {
 
 ////CLEAR ALL FIELDS HANDLER
 function onFileClear(e) {
-  $(".upload__label input").value = "";
+  const $input = $(".upload__label input");
+
+  $input[0].value = "";
 
   if (!/safari/i.test(navigator.userAgent)) {
-    input.type = "";
-    input.type = "file";
+    $input[0].type = "";
+    $input[0].type = "file";
   }
 
   quantityInputEventListeners.remove();
