@@ -20,7 +20,7 @@
 }
 
 .result-block__accessories {
-  margin: 0 0 20px;
+  margin: 0 0 30px;
 
   i {
     display: block;
@@ -33,6 +33,12 @@
 
 .result-block__refnets {
   margin: 0 0 10px;
+
+  label {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .result-info,
@@ -53,7 +59,7 @@
 .result-info {
   i {
     display: block;
-    margin: 0 0 15px;
+    margin: 0 0 25px;
     max-width: 500px;
     font-size: 13px;
     line-height: 18px;
@@ -78,4 +84,23 @@
       line-height: 15px;
     }
   }
+}
+
+.result table tr:first-child td:nth-child(5) {
+  position: relative;
+
+  &::after {
+    content: "Введите кол-во систем";
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: 0;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: $text-main;
+  }
+}
+
+.result table input {
+  background-color: $grey200;
 }

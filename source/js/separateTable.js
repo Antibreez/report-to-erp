@@ -27,7 +27,7 @@ function getUsefullPartFromDoc($el) {
     .nextUntil(`h1:contains(${$refRu.length > 0 ? ru2 : en2})`);
 }
 
-export function getTablesFromDoc($el) {
+export function getTablesFromDoc($el, file) {
   let newTable = "";
 
   const usefullPart = getUsefullPartFromDoc($el);
@@ -48,12 +48,17 @@ export function getTablesFromDoc($el) {
 
       //Take only needed tables wich have "Model" cell
       if (refLabel === "Модель" || refLabel === "Model") {
-        const title = $(item).prev().text().split(" - ")[0];
+        let title = $(item).prev().text().split(" - ")[0];
+        title = title.includes("Out") ? file.name.split(".doc")[0] : title;
+
         $(item)
           .find("tr")
           .each((i, row) => {
             //Ignore row with titles
             if (i === 0) return;
+
+            if ($(row).find("td").first().children().text().trim() === "")
+              return;
 
             //set id for row
             $(row).attr("data-idx", totalSystems.current);
@@ -69,7 +74,9 @@ export function getTablesFromDoc($el) {
                 .text(text.slice(0, text.length - 1));
             }
 
-            const $titleCell = $("<td><p></p></td>");
+            const $titleCell = $(
+              "<td><p contentEditable tabindex='-1'></p></td>"
+            );
             const $inputCell = $('<td class="noExl"></td>');
             const $quantityCell = $cells.eq(1).clone(false);
             $quantityCell.addClass("noExl");
@@ -98,5 +105,11 @@ export function getTablesFromDoc($el) {
 }
 
 export function makeSeparateTable(table) {
-  $(".result table").append(table);
+  if (table) {
+    $(".result table").append(table);
+  }
+}
+
+export function clearSeparateTable() {
+  $(".result table").html("");
 }

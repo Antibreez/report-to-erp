@@ -7,7 +7,7 @@
     position: relative;
     display: block;
     padding: 16px 20px;
-    border: 1px dashed $grey300;
+    border: 2px dashed $blue;
     border-radius: 2px;
     background-color: #fff;
     transition: background-color 0.2s, border-color 0.2s;
@@ -23,8 +23,8 @@
     &:hover,
     &.highlight {
       cursor: pointer;
-      background-color: $grey200;
-      border: 1px solid $grey200;
+      background-color: rgba(220, 220, 255, 0.5);
+      //border: 2px solid $grey200;
     }
 
     &::after {
@@ -40,17 +40,47 @@
     }
   }
 
-  &__main-title {
+  &__main-title-block {
+    width: 100%;
     margin: 0 0 20px;
-    font-size: 24px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__main-title {
+    margin: 0;
+    padding: 30px 50px 30px 0;
+    max-width: 800px;
+    font-weight: 400;
+    font-size: 20px;
     line-height: 30px;
   }
 
+  &__main-title-img {
+    width: 100%;
+    max-width: 300px;
+    height: 130px;
+    background-image: url("../img/title-img.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
   &__title {
-    @include font(15px, 24px);
-    color: $dark-grey;
+    @include font(18px, 24px);
+    font-weight: 600;
+    color: $text-main;
     margin: 0 0 24px;
     padding-right: 30px;
+
+    span {
+      display: block;
+      font-size: 16px;
+
+      &:first-of-type {
+        margin-top: 10px;
+      }
+    }
   }
 
   &__desc {
@@ -64,7 +94,7 @@
     color: $dark-grey;
     display: none;
     position: relative;
-    padding: 16px 70px 16px 20px;
+    padding: 32px 20px;
     background-color: $grey200;
     align-items: center;
     margin-top: 8px;
@@ -108,9 +138,8 @@
   &__close {
     @include btn-reset;
     position: absolute;
-    top: 50%;
+    top: 20px;
     right: 20px;
-    transform: translateY(-50%);
     transition: color 0.2s;
 
     b {
@@ -128,10 +157,6 @@
       color: $blue;
     }
   }
-}
-
-.upload__result {
-  padding: 25px 20px;
 }
 
 .upload__input-results {
@@ -198,5 +223,36 @@
     &:hover {
       border: 1px dashed $fail;
     }
+  }
+}
+
+.upload__failed-files-block {
+  padding-top: 20px;
+}
+
+.upload__failed-files-title {
+  margin: 0 0 10px;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 600;
+  color: $fail;
+}
+
+.upload__failed-files-item {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 600;
+  color: $fail;
+
+  &::before {
+    content: "---";
+    display: inline-block;
+    margin-right: 5px;
+  }
+
+  &::after {
+    content: "---";
+    display: inline-block;
+    margin-left: 5px;
   }
 }

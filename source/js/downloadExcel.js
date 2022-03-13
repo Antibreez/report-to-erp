@@ -1,7 +1,11 @@
 $("#button").on("click", function () {
-  $(".result table").table2excel();
+  $(".result table").table2excel({
+    name: "table",
+  });
 });
 
 $("#button-total").on("click", function () {
-  $(".result-total table").table2excel();
+  $(".result-total table").table2excel({
+    name: "table",
+  });
 });

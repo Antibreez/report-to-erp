@@ -38,12 +38,14 @@ function changeTable($table, data) {
 }
 
 export function changeRefnets() {
-  const data = $(".result-block__refnets input").is(":checked")
-    ? REFNETS_DRQ
-    : REFNETS_KHRQ;
+  const data = $refnetInput.is(":checked") ? REFNETS_DRQ : REFNETS_KHRQ;
 
   changeTable($resultTable, data);
   makeTotalTable();
+}
+
+export function resetRefnetsCheckbox() {
+  $refnetInput.prop("checked", false);
 }
 
 $refnetInput.on("change", changeRefnets);

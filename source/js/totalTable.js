@@ -31,8 +31,11 @@ function formatTotalRow($row) {
 
 ////MAKET TOTAL TABLE FROM DETAILED TABLE
 export function makeTotalTable() {
-  const $newTable = $("<table></table>");
   const $tableRows = $(".result table tr");
+
+  if ($tableRows.length === 0) return;
+
+  const $newTable = $("<table></table>");
 
   $tableRows.each((index, item) => {
     if (index === 0) {
@@ -72,4 +75,8 @@ export function makeTotalTable() {
   $newTable.html(sortedRows);
 
   $(".result-total").html($newTable);
+}
+
+export function clearTotalTable() {
+  $(".result-total table").html("");
 }

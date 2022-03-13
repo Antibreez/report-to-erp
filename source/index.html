@@ -3,25 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link
+      rel="shortcut icon"
+      href="https://faviconka.ru/ico/1/faviconka.ru_1_116474.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="icon"
+      href="https://faviconka.ru/ico/1/faviconka.ru_1_116474.ico"
+      type="image/x-icon"
+    />
     <link rel="stylesheet" href="css/style.min.css" />
     <link
       rel="preload"
       href="./fonts/montserrat-v23-latin_cyrillic-regular.woff2"
       as="font"
+      type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
       href="./fonts/montserrat-v23-latin_cyrillic-200.woff2"
       as="font"
+      type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
       href="./fonts/montserrat-v23-latin_cyrillic-600.woff2"
       as="font"
+      type="font/woff2"
       crossorigin
     />
     <title>Конвертация</title>
@@ -30,7 +41,13 @@
     <div class="upload-page">
       <div class="container">
         <div class="upload">
-          <p class="upload__main-title">Загрузка файлов</p>
+          <div class="upload__main-title-block">
+            <h1 class="upload__main-title">
+              Приложение для создания таблиц Excel из&nbsp;отчетов программы
+              подбора VRV&nbsp;Xpress для формирования ТКП в 1C:ERP
+            </h1>
+            <div class="upload__main-title-img"></div>
+          </div>
           <div class="upload__input-wrap">
             <label class="upload__label" data-input="0">
               <input
@@ -41,7 +58,13 @@
                 multiple
               />
               <p class="upload__title">
-                Нажмите, чтобы загрузить файлы или перетащите их сюда
+                Нажмите на эту область, чтобы загрузить файлы или перетащите их
+                сюда. *
+                <br />
+                <span>
+                  * Выбирать и перетаскивать можно сразу несколько файлов.
+                </span>
+                <span>* Файлы можно добавлять к уже загруженным.</span>
               </p>
               <p class="upload__desc">Файлы .docx</p>
             </label>
@@ -49,7 +72,15 @@
 
           <div class="upload__input-results">
             <div class="upload__result" data-result="0">
-              <p class="upload__name">Файлы загружены</p>
+              <div class="upload__name">
+                Файлы загружены
+                <div class="upload__failed-files-block" style="display: none">
+                  <p class="upload__failed-files-title">
+                    В этих файлах системы не найдены:
+                  </p>
+                  <div class="upload__failed-files"></div>
+                </div>
+              </div>
               <button type="button" class="upload__close">
                 <b>Очистить</b>
                 <!-- <svg class="upload__close-icon" role="img" width="24" height="24">
@@ -62,7 +93,7 @@
           <div class="loader">
             <div class="lds-dual-ring"></div>
             <div class="loader__count">
-              <span class="loader__count-label">Файлы:&nbsp;</span>
+              <span class="loader__count-label"><span>Файлы:&nbsp;</span></span>
               <span class="loader__count-current"></span>/<span
                 class="loader__count-max"
               ></span>
@@ -81,6 +112,7 @@
         </div>
 
         <div class="result-block">
+          <!-- Блок с выбором опций -->
           <div class="result-block__accessories" style="display: none">
             <div class="result-block__refnets">
               <label>
@@ -88,12 +120,6 @@
                 <span>Использовать рефнеты DRQ</span>
               </label>
             </div>
-            <!-- <div class="result-block__controllers">
-              <label>
-                <input type="checkbox" name="controllers" />
-                <span>Использовать рефнеты DRQ</span>
-              </label>
-            </div> -->
             <i>
               <b>
                 При добавлении новых систем к существующим, проверьте рефнеты,
@@ -101,6 +127,8 @@
               </b>
             </i>
           </div>
+
+          <!-- Блок с кнопками переключения между раздельной о общей таблицами -->
           <div class="result-block__radios">
             <button
               id="separate-radio"
@@ -113,6 +141,8 @@
               Общая спец-ия
             </button>
           </div>
+
+          <!-- Блок с таблицей посистемной спецификации -->
           <div class="result-info" style="display: none">
             <button class="save-button" id="button">Скачать</button>
             <i>
@@ -123,6 +153,8 @@
             </i>
             <div class="result"><table></table></div>
           </div>
+
+          <!-- Блок с таблицей общей спецификации -->
           <div class="result-total-info" style="display: none">
             <button class="save-button" id="button-total">Скачать</button>
             <div class="result-total"><table></table></div>
@@ -132,6 +164,19 @@
     </div>
 
     <div class="preloader"><div class="lds-dual-ring"></div></div>
+
+    <div class="modal" id="error-modal">
+      <div class="modal__blackout">
+        <div class="modal__content">
+          <h2 class="modal__title">Возникла ошибка!</h2>
+          <div class="modal__text">
+            <span>В этих загруженных файлах системы не найдены:</span>
+            <div class="modal__failed-files"></div>
+          </div>
+          <button type="button" class="modal__button">Закрыть</button>
+        </div>
+      </div>
+    </div>
 
     <script src="js/main.min.js"></script>
   </body>

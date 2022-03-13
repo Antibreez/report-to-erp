@@ -1,16 +1,48 @@
 import { loader } from "./fileLoader";
-import { makeTotalTable } from "./totalTable";
+import { makeTotalTable, clearTotalTable } from "./totalTable";
 import quantityInputEventListeners from "./quantityInputEventListeners";
-import { getTablesFromDoc, makeSeparateTable } from "./separateTable";
+import {
+  getTablesFromDoc,
+  makeSeparateTable,
+  clearSeparateTable,
+} from "./separateTable";
 import { totalSystems } from "./globalData";
 import { resultLabel } from "./resultLabel";
 import { dropdownEvents } from "./dropdownEvents";
+import { resultBlock } from "./resultBlock";
+import { resetRefnetsCheckbox } from "./changeAccessories";
+import { modal } from "./errorModal";
 
 const uploads = document.querySelectorAll(".upload");
+
+function onLastFileLoaded() {
+  resultLabel.show();
+
+  if ($(".result table").find("tr").length > 0) {
+    resultBlock.show();
+    // $(".result-block__radios button").removeAttr("disabled");
+    // $(".result-block__radios button").first().addClass("active");
+    // $(".result-info").show();
+    // $(".result-block__accessories").show();
+
+    makeTotalTable();
+
+    quantityInputEventListeners.remove();
+    quantityInputEventListeners.add();
+  }
+
+  setTimeout(() => {
+    loader.remove();
+    modal.isNeededToShow() && modal.show();
+  }, 1000);
+}
 
 ////FUNCTION FOR MULTIFILES INPUT
 function readmultifiles(input, files) {
   var reader = new FileReader();
+
+  resultLabel.resetNewFailedFileStatus();
+  loader.add(files);
 
   function readFile(index) {
     if (index >= files.length) return;
@@ -19,8 +51,12 @@ function readmultifiles(input, files) {
 
     reader.onloadstart = function (e) {
       if (index === 0) {
-        console.log("load started");
-        loader.add(files);
+        console.log(
+          "load started",
+          file.type ===
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        );
+        //loader.add(files);
       }
     };
 
@@ -38,19 +74,27 @@ function readmultifiles(input, files) {
 
           //take usefull part from converted document
           //const usefullPart = getUsefullPart($doc);
-          const resultTables = getTablesFromDoc($doc);
+          const resultTables = getTablesFromDoc($doc, file);
 
           //throw error if no success
           if (!resultTables) {
-            alert(`
-Ошибка!
-Файл не содержит систем:
-"${file.name}"
-            `);
-            loader.remove();
-            //$("#button").removeAttr("disabled");
-            $(".upload__close").trigger("click");
-            return;
+            // alert(`
+            // Ошибка!
+            // Файл не содержит систем:
+            // "${file.name}"
+            //             `);
+            // loader.remove();
+
+            // $(".upload__close").trigger("click");
+            //loader.remove();
+
+            //modal.show(file.name);
+            //return;
+            resultLabel.addFailedFilename(file.name);
+            // $(".upload__failed-files-block").show();
+            // $(".upload__failed-files").append(
+            //   `<div class='upload__failed-files-item'>${file.name}</div>`
+            // );
           }
 
           //take tables from usefull part
@@ -72,20 +116,61 @@ function readmultifiles(input, files) {
 
           //on files loading finish
           if (index === files.length - 1) {
-            resultLabel.show();
+            onLastFileLoaded();
+            // resultLabel.show();
 
-            $(".result-block__radios button").removeAttr("disabled");
-            $(".result-block__radios button").first().addClass("active");
-            $(".result-info").show();
-            $(".result-block__accessories").show();
+            // if ($(".result table").find("tr").length > 0) {
+            //   $(".result-block__radios button").removeAttr("disabled");
+            //   $(".result-block__radios button").first().addClass("active");
+            //   $(".result-info").show();
+            //   $(".result-block__accessories").show();
 
-            makeTotalTable();
+            //   makeTotalTable();
 
-            quantityInputEventListeners.add();
+            //   quantityInputEventListeners.add();
+            // }
 
-            setTimeout(() => {
-              loader.remove();
-            }, 1000);
+            // setTimeout(() => {
+            //   loader.remove();
+            // }, 1000);
+          }
+
+          readFile(index + 1);
+        })
+        .catch((err) => {
+          resultLabel.addFailedFilename(file.name);
+          // $(".upload__failed-files-block").show();
+          // $(".upload__failed-files").append(
+          //   `<div class='upload__failed-files-item'>${file.name}</div>`
+          // );
+
+          //render currently loading file name
+          if (index < files.length - 1) {
+            loader.setFileName(files[index + 1]);
+          }
+
+          //render files quantity progress
+          loader.setStage(index);
+
+          //on files loading finish
+          if (index === files.length - 1) {
+            onLastFileLoaded();
+            // resultLabel.show();
+
+            // if ($(".result table").find("tr").length > 0) {
+            //   $(".result-block__radios button").removeAttr("disabled");
+            //   $(".result-block__radios button").first().addClass("active");
+            //   $(".result-info").show();
+            //   $(".result-block__accessories").show();
+
+            //   makeTotalTable();
+
+            //   quantityInputEventListeners.add();
+            // }
+
+            // setTimeout(() => {
+            //   loader.remove();
+            // }, 1000);
           }
 
           readFile(index + 1);
@@ -146,15 +231,22 @@ function onFileClear(e) {
 
   resultLabel.hide();
 
-  $(".result-block__radios button").attr("disabled", "true");
-  $(".result-block__radios button").first().removeClass("active");
-  $(".result-block__radios button").last().removeClass("active");
-  $(".result-info").hide();
-  $(".result-total-info").hide();
-  $(".result-block__accessories").hide();
+  resultBlock.hide();
+  // $(".result-block__radios button").attr("disabled", "true");
+  // $(".result-block__radios button").first().removeClass("active");
+  // $(".result-block__radios button").last().removeClass("active");
+  // $(".result-info").hide();
+  // $(".result-total-info").hide();
+  // $(".result-block__accessories").hide();
 
-  $(".result table").html("");
-  $(".result-total table").html("");
+  clearSeparateTable();
+  clearTotalTable();
+  //$(".result-total table").html("");
+  resetRefnetsCheckbox();
+
+  // $(".upload__failed-files-block").hide();
+  // $(".upload__failed-files").html("");
+
   totalSystems.reset();
 }
 
