@@ -8,6 +8,7 @@ const outdoorJoints = [
 ];
 
 const outdoorUnits = ["rxysq8ty1", "rxysq10ty1", "rxysq12ty1"];
+const bpUnits = ["bpmks967a2", "bpmks967a3"];
 
 //let totalSystems = 0;
 
@@ -69,6 +70,7 @@ export function getTablesFromDoc($el, file) {
             $cells.eq(2).remove();
             const text = $cells.eq(0).children().text();
 
+            //Joints and mini-VRF names replacement
             if (
               outdoorJoints.includes(text.toLowerCase()) ||
               outdoorUnits.includes(text.toLowerCase())
@@ -79,6 +81,15 @@ export function getTablesFromDoc($el, file) {
                 .text(text.slice(0, text.length - 1));
             }
 
+            //BP-units names replacements
+            if (bpUnits.includes(text.toLowerCase())) {
+              $cells
+                .eq(0)
+                .children()
+                .text(text.toLowerCase().split("a").join("b").toUpperCase());
+            }
+
+            //Make additional cells
             const $titleCell = $(
               "<td><p contentEditable tabindex='-1'></p></td>"
             );
@@ -87,8 +98,10 @@ export function getTablesFromDoc($el, file) {
             $quantityCell.addClass("noExl");
             $quantityCell.css("display", "none");
 
+            //Add additional empty column
             $("<td><p></p></td>").insertAfter($cells.first());
 
+            //Insert system title and quantity input in the first row
             if (i === 1) {
               $titleCell.find("p").text(title);
               const $input = $('<input type="number" value="1">');
@@ -96,6 +109,7 @@ export function getTablesFromDoc($el, file) {
               $inputCell.append($input);
             }
 
+            //Add additional columns
             $(row).prepend($titleCell);
             $(row).append($inputCell);
             $(row).append($quantityCell);
