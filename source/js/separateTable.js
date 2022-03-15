@@ -7,6 +7,8 @@ const outdoorJoints = [
   "bhfq23p1357",
 ];
 
+const outdoorUnits = ["rxysq8ty1", "rxysq10ty1", "rxysq12ty1"];
+
 //let totalSystems = 0;
 
 function getUsefullPartFromDoc($el) {
@@ -67,7 +69,10 @@ export function getTablesFromDoc($el, file) {
             $cells.eq(2).remove();
             const text = $cells.eq(0).children().text();
 
-            if (outdoorJoints.includes(text.toLowerCase())) {
+            if (
+              outdoorJoints.includes(text.toLowerCase()) ||
+              outdoorUnits.includes(text.toLowerCase())
+            ) {
               $cells
                 .eq(0)
                 .children()
