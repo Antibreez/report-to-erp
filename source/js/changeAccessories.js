@@ -22,11 +22,14 @@ const REFNETS_KHRQ = {
   "DRQ23M75T": "KHRQ23M75T",
 };
 
+const CONTROLLERS = ["BRC1D52", "BRC1H52W", "BRC1H52S", "BRC1H52K", "DC60W"];
+
 const $resultTable = $(".result table");
 const $refnetInput = $(".result-block__refnets input");
+const $controllersInput = $(".result-block__controllers input");
 
-function changeTable($table, data) {
-  $table.find("tr").each((index, item) => {
+function changeRefnetCells(data) {
+  $resultTable.find("tr").each((index, item) => {
     const $cell = $(item).find("td").eq(1).children();
 
     const text = $cell.text();
@@ -37,10 +40,29 @@ function changeTable($table, data) {
   });
 }
 
+function changeControllerCells(value) {
+  $resultTable.find("tr").each((index, item) => {
+    const $cell = $(item).find("td").eq(1).children();
+
+    const text = $cell.text();
+
+    if (CONTROLLERS.includes(text)) {
+      $cell.text(value);
+    }
+  });
+}
+
 export function changeRefnets() {
   const data = $refnetInput.is(":checked") ? REFNETS_DRQ : REFNETS_KHRQ;
 
-  changeTable($resultTable, data);
+  changeRefnetCells(data);
+  makeTotalTable();
+}
+
+function changeControllers(e) {
+  const value = $(e.target).val();
+
+  changeControllerCells(value);
   makeTotalTable();
 }
 
@@ -48,4 +70,9 @@ export function resetRefnetsCheckbox() {
   $refnetInput.prop("checked", false);
 }
 
+export function resetControllers() {
+  $controllersInput.first().prop("checked", true);
+}
+
 $refnetInput.on("change", changeRefnets);
+$controllersInput.on("change", changeControllers);

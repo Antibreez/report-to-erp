@@ -32,13 +32,34 @@
 }
 
 .result-block__refnets {
-  margin: 0 0 10px;
+  margin: 0 0 15px;
 
   label {
     &:hover {
       cursor: pointer;
     }
   }
+}
+
+.result-block__controllers {
+  margin: 0 0 15px;
+
+  label {
+    display: block;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.result-block__controllers-title {
+  margin: 0 0 10px;
+  font-weight: bold;
 }
 
 .result-info,

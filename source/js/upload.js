@@ -11,6 +11,7 @@ import { resultLabel } from "./resultLabel";
 import { dropdownEvents } from "./dropdownEvents";
 import { resultBlock } from "./resultBlock";
 import { resetRefnetsCheckbox } from "./changeAccessories";
+import { resetControllers } from "./changeAccessories";
 import { modal } from "./errorModal";
 
 const uploads = document.querySelectorAll(".upload");
@@ -243,6 +244,7 @@ function onFileClear(e) {
   clearTotalTable();
   //$(".result-total table").html("");
   resetRefnetsCheckbox();
+  resetControllers();
 
   // $(".upload__failed-files-block").hide();
   // $(".upload__failed-files").html("");
