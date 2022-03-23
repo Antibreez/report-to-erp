@@ -13,6 +13,7 @@ import { resultBlock } from "./resultBlock";
 import { resetRefnetsCheckbox } from "./changeAccessories";
 import { resetControllers } from "./changeAccessories";
 import { modal } from "./errorModal";
+import ppd from "./ppd";
 
 const uploads = document.querySelectorAll(".upload");
 
@@ -106,6 +107,7 @@ function readmultifiles(input, files) {
           //render detailed and total tables
           //$(".result table").append(resultTables);
           makeSeparateTable(resultTables);
+          ppd.renderOptions();
 
           //render currently loading file name
           if (index < files.length - 1) {
@@ -242,6 +244,7 @@ function onFileClear(e) {
 
   clearSeparateTable();
   clearTotalTable();
+  ppd.clearResult();
   //$(".result-total table").html("");
   resetRefnetsCheckbox();
   resetControllers();

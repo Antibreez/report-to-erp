@@ -54,6 +54,14 @@ export function getTablesFromDoc($el, file) {
         let title = $(item).prev().text().split(" - ")[0];
         title = title.includes("Out") ? file.name.split(".doc")[0] : title;
 
+        let brc = $(item).find('p:contains("BRC")');
+        let amount = 0;
+
+        brc.each((idx, el) => {
+          const x = +$(el).parents("tr").find("td").eq(1).children().text();
+          amount += x;
+        });
+
         $(item)
           .find("tr")
           .each((i, row) => {
@@ -103,6 +111,8 @@ export function getTablesFromDoc($el, file) {
 
             //Insert system title and quantity input in the first row
             if (i === 1) {
+              $(row).attr("data-units", 1);
+              $(row).attr("data-amount", amount);
               $titleCell.find("p").text(title);
               const $input = $('<input type="number" value="1">');
 

@@ -1,4 +1,5 @@
 import { makeTotalTable } from "./totalTable";
+import ppd from "./ppd";
 
 let focusedInputValue = 0;
 
@@ -9,6 +10,7 @@ function onAmoutInputBlur(e) {
 
   if (multiplier !== focusedInputValue) {
     const $row = $(input).parents("tr").first();
+    $row.attr("data-units", multiplier);
 
     const idx = +$row.attr("data-idx");
 
@@ -22,6 +24,7 @@ function onAmoutInputBlur(e) {
     });
 
     makeTotalTable();
+    ppd.renderOptions();
   }
 }
 

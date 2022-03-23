@@ -9,3 +9,9 @@ $("#button-total").on("click", function () {
     name: "table",
   });
 });
+
+$("#button-ppd").on("click", function () {
+  $(".result-ppd table").table2excel({
+    name: "table",
+  });
+});
