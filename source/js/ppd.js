@@ -56,8 +56,6 @@ function renderOptions() {
   addEventListeners();
 }
 
-function onChange(e) {}
-
 function onMultipleCheck(e) {
   if (e.shiftKey) {
     e.preventDefault();
@@ -103,10 +101,24 @@ function onMultipleCheck(e) {
   }
 }
 
+function onInputChange(e) {
+  if (e.shiftKey) {
+    e.preventDefault();
+  }
+}
+
 function addEventListeners() {
   const $labels = $($resultPpdOptions.find("label"));
 
   $labels.on("mousedown", onMultipleCheck);
+  $labels.children("input").on("click", onInputChange);
+}
+
+function removeEventListeners() {
+  const $labels = $($resultPpdOptions.find("label"));
+
+  $labels.off("mousedown", onMultipleCheck);
+  $labels.children("input").off("click", onInputChange);
 }
 
 function makeRow(title, item, amount) {
@@ -171,6 +183,7 @@ function renderGroup(amounts) {
 function clearResult() {
   $table.html("");
   tableGroups = 1;
+  removeEventListeners();
 }
 
 $makeGroupBtn.on("click", () => {

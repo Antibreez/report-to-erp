@@ -192,6 +192,22 @@
   }
 }
 
+.result-ppd__title {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  margin: 0 0 20px;
+}
+
+.result-ppd__sub-title {
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: red;
+  max-width: 1000px;
+}
+
 .result-ppd__messages {
   margin: 0 0 20px;
 
@@ -204,4 +220,14 @@
     font-weight: bold;
     font-style: italic;
   }
+}
+
+.mouse-img {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-image: url("../img/mouse-left-click.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  vertical-align: middle;
 }
