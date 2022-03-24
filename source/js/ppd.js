@@ -7,12 +7,20 @@ const PPD = [
 ];
 
 let tableGroups = 1;
+let lastCheckedIdx = null;
+let colorNumber = 0;
+const colors = ["hsl(240, 100%, 95%)", "hsl(350, 100%, 95%)"];
 
 const $resultPpdOptions = $(".result-ppd__options");
 const $makeGroupBtn = $("#make-ppd-group");
 const $clearGroupBtn = $("#clear-ppd-group");
 const $checkAllBtn = $("#ppd-check-all");
 const $table = $(".result-ppd__table table");
+
+function getColor() {
+  colorNumber++;
+  return colorNumber % 2 ? colors[0] : colors[1];
+}
 
 function renderOptions() {
   clearResult();
@@ -29,24 +37,37 @@ function renderOptions() {
     const title = $(row).find("td").eq(0).children().text();
 
     if (units > 1) {
+      const currentColor = getColor();
+
       for (let i = 1; i <= units; i++) {
         $options.append(`
-          <label data-idx="${idx + addition + i}">
-            <input type="checkbox" data-amount="${amount}" data-idx="${
-          idx + addition + i
-        }">
-            <span>${title} №${i} (${amount} в/б)</span>
+          <label
+            class="group ${
+              i === 1 ? "group-first" : i === units ? "group-last" : ""
+            }"
+            style="background-color: ${currentColor}"
+            data-idx="${idx + addition + i}"
+          >
+            <input
+              type="checkbox"
+              data-amount="${amount}" data-idx="${idx + addition + i}"
+            >
+            <span>${title} ---- <b>${amount}</b> в/б</span>
           </label>
         `);
       }
       addition += units - 1;
     } else {
       $options.append(`
-        <label data-idx="${idx + addition + 1}">
-          <input type="checkbox" data-amount="${amount}" data-idx="${
-        idx + addition + 1
-      }">
-          <span>${title} (${amount} в/б)</span>
+        <label
+          data-idx="${idx + addition + 1}"
+        >
+          <input
+            type="checkbox"
+            data-amount="${amount}"
+            data-idx="${idx + addition + 1}"
+          >
+          <span>${title} ---- <b>${amount}</b> в/б</span>
         </label>
       `);
     }
@@ -65,9 +86,8 @@ function onMultipleCheck(e) {
     if ($label.children("input").is(":checked")) return;
 
     const $block = $label.parent();
-    const $checkedLabel = $block.find("input:checked").first().parent();
 
-    if ($checkedLabel.length === 0) {
+    if (lastCheckedIdx === null) {
       $block
         .find("input")
         .filter((idx, el) => {
@@ -75,35 +95,67 @@ function onMultipleCheck(e) {
           return id <= currentIdx;
         })
         .prop("checked", true);
-    } else {
-      const checkedIdx = +$checkedLabel.attr("data-idx");
-
-      if (checkedIdx > currentIdx) {
-        $block
-          .find("input")
-          .filter((idx, el) => {
-            const id = +$(el).attr("data-idx");
-            return id >= currentIdx && id < checkedIdx;
-          })
-          .prop("checked", true);
-      }
-
-      if (checkedIdx < currentIdx) {
-        $block
-          .find("input")
-          .filter((idx, el) => {
-            const id = +$(el).attr("data-idx");
-            return id <= currentIdx && id > checkedIdx;
-          })
-          .prop("checked", true);
-      }
+    } else if (lastCheckedIdx < currentIdx) {
+      $block
+        .find("input")
+        .filter((idx, el) => {
+          const id = +$(el).attr("data-idx");
+          return id <= currentIdx && id > lastCheckedIdx;
+        })
+        .prop("checked", true);
+    } else if (lastCheckedIdx > currentIdx) {
+      $block
+        .find("input")
+        .filter((idx, el) => {
+          const id = +$(el).attr("data-idx");
+          return id >= currentIdx && id < lastCheckedIdx;
+        })
+        .prop("checked", true);
     }
+
+    // const $checkedLabel = $block.find("input:checked").first().parent();
+
+    // if ($checkedLabel.length === 0) {
+    //   $block
+    //     .find("input")
+    //     .filter((idx, el) => {
+    //       const id = +$(el).attr("data-idx");
+    //       return id <= currentIdx;
+    //     })
+    //     .prop("checked", true);
+    // } else {
+    //   const checkedIdx = +$checkedLabel.attr("data-idx");
+
+    //   if (checkedIdx > currentIdx) {
+    //     $block
+    //       .find("input")
+    //       .filter((idx, el) => {
+    //         const id = +$(el).attr("data-idx");
+    //         return id >= currentIdx && id < checkedIdx;
+    //       })
+    //       .prop("checked", true);
+    //   }
+
+    //   if (checkedIdx < currentIdx) {
+    //     $block
+    //       .find("input")
+    //       .filter((idx, el) => {
+    //         const id = +$(el).attr("data-idx");
+    //         return id <= currentIdx && id > checkedIdx;
+    //       })
+    //       .prop("checked", true);
+    //   }
+    // }
   }
 }
 
 function onInputChange(e) {
   if (e.shiftKey) {
     e.preventDefault();
+  } else {
+    if ($(e.currentTarget).is(":checked")) {
+      lastCheckedIdx = +$(e.currentTarget).attr("data-idx");
+    }
   }
 }
 
@@ -183,6 +235,7 @@ function renderGroup(amounts) {
 function clearResult() {
   $table.html("");
   tableGroups = 1;
+  lastCheckedIdx = null;
   removeEventListeners();
 }
 

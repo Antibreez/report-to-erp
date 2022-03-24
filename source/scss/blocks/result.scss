@@ -164,12 +164,27 @@
   display: flex;
   flex-direction: column;
   margin: 0 0 50px;
+  align-items: flex-start;
 
   label {
     display: inline-block;
+    padding-right: 16px;
+    padding-left: 5px;
 
     &:not(:last-child) {
       margin-bottom: 5px;
+    }
+
+    &.group {
+      border-left: 1px solid #999;
+    }
+
+    &.group-first {
+      border-top: 1px solid #999;
+    }
+
+    &.group-last {
+      border-bottom: 1px solid #999;
     }
   }
 }
