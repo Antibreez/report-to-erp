@@ -1,11 +1,7 @@
 import { loader } from "./fileLoader";
 import { makeTotalTable, clearTotalTable } from "./totalTable";
 import quantityInputEventListeners from "./quantityInputEventListeners";
-import {
-  getTablesFromDoc,
-  makeSeparateTable,
-  clearSeparateTable,
-} from "./separateTable";
+import { getTablesFromDoc, makeSeparateTable, clearSeparateTable } from "./separateTable";
 import { totalSystems } from "./globalData";
 import { resultLabel } from "./resultLabel";
 import { dropdownEvents } from "./dropdownEvents";
@@ -14,14 +10,21 @@ import { resetRefnetsCheckbox } from "./changeAccessories";
 import { resetControllers } from "./changeAccessories";
 import { modal } from "./errorModal";
 import ppd from "./ppd";
+import vrf from "./vrfTable";
+import * as XLSX from "xlsx";
 
 const uploads = document.querySelectorAll(".upload");
 
 function onLastFileLoaded() {
   resultLabel.show();
 
+  if ($(".result__midea table").find("tr").length > 0) {
+    $(".result__midea").show();
+  }
+
   if ($(".result table").find("tr").length > 0) {
     resultBlock.show();
+
     // $(".result-block__radios button").removeAttr("disabled");
     // $(".result-block__radios button").first().addClass("active");
     // $(".result-info").show();
@@ -53,134 +56,192 @@ function readmultifiles(input, files) {
 
     reader.onloadstart = function (e) {
       if (index === 0) {
-        console.log(
-          "load started",
-          file.type ===
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        );
+        console.log("load started", file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         //loader.add(files);
       }
     };
 
     reader.onprogress = function (e) {};
 
-    reader.onload = function (e) {
-      const result = mammoth
-        .convertToHtml({
-          arrayBuffer: reader.result,
-        })
-        .then((res) => {
-          //get converted to html document
-          const $doc = $("<div></div>");
-          $doc.append(res.value);
+    // IF CONVERT WORD REPORT TO EXCEL
+    if ($(".upload-page--word").length > 0) {
+      reader.onload = function (e) {
+        const result = mammoth
+          .convertToHtml({
+            arrayBuffer: reader.result,
+          })
+          .then((res) => {
+            const $doc = $("<div></div>");
+            $doc.append(res.value);
+            const resultTables = getTablesFromDoc($doc, file);
 
-          //take usefull part from converted document
-          //const usefullPart = getUsefullPart($doc);
-          const resultTables = getTablesFromDoc($doc, file);
+            if (!resultTables) {
+              resultLabel.addFailedFilename(file.name);
+            }
 
-          //throw error if no success
-          if (!resultTables) {
-            // alert(`
-            // Ошибка!
-            // Файл не содержит систем:
-            // "${file.name}"
-            //             `);
-            // loader.remove();
+            makeSeparateTable(resultTables);
+            ppd.renderOptions();
 
-            // $(".upload__close").trigger("click");
-            //loader.remove();
+            //render currently loading file name
+            if (index < files.length - 1) {
+              loader.setFileName(files[index + 1]);
+            }
 
-            //modal.show(file.name);
-            //return;
+            //render files quantity progress
+            loader.setStage(index);
+
+            //on files loading finish
+            if (index === files.length - 1) {
+              onLastFileLoaded();
+            }
+
+            readFile(index + 1);
+          })
+          .catch((err) => {
             resultLabel.addFailedFilename(file.name);
-            // $(".upload__failed-files-block").show();
-            // $(".upload__failed-files").append(
-            //   `<div class='upload__failed-files-item'>${file.name}</div>`
-            // );
-          }
 
-          //take tables from usefull part
-          //const $tables = $("<div></div>").append(usefullPart);
-          //make proper format of tables for render
-          //const currentTables = getTablesFromDoc(usefullPart);
+            //render currently loading file name
+            if (index < files.length - 1) {
+              loader.setFileName(files[index + 1]);
+            }
 
-          //render detailed and total tables
-          //$(".result table").append(resultTables);
-          makeSeparateTable(resultTables);
-          ppd.renderOptions();
+            //render files quantity progress
+            loader.setStage(index);
 
-          //render currently loading file name
-          if (index < files.length - 1) {
-            loader.setFileName(files[index + 1]);
-          }
+            //on files loading finish
+            if (index === files.length - 1) {
+              onLastFileLoaded();
+            }
 
-          //render files quantity progress
-          loader.setStage(index);
+            readFile(index + 1);
+          });
+      };
 
-          //on files loading finish
-          if (index === files.length - 1) {
-            onLastFileLoaded();
-            // resultLabel.show();
+      reader.readAsArrayBuffer(file);
+    }
 
-            // if ($(".result table").find("tr").length > 0) {
-            //   $(".result-block__radios button").removeAttr("disabled");
-            //   $(".result-block__radios button").first().addClass("active");
-            //   $(".result-info").show();
-            //   $(".result-block__accessories").show();
+    // IF CONVERT EXCEL TO EXCEL
+    if ($(".upload-page--excel").length > 0) {
+      reader.onload = function (e) {
+        var data = new Uint8Array(reader.result);
+        // var data = e.target.result;
 
-            //   makeTotalTable();
-
-            //   quantityInputEventListeners.add();
-            // }
-
-            // setTimeout(() => {
-            //   loader.remove();
-            // }, 1000);
-          }
-
-          readFile(index + 1);
-        })
-        .catch((err) => {
-          resultLabel.addFailedFilename(file.name);
-          // $(".upload__failed-files-block").show();
-          // $(".upload__failed-files").append(
-          //   `<div class='upload__failed-files-item'>${file.name}</div>`
-          // );
-
-          //render currently loading file name
-          if (index < files.length - 1) {
-            loader.setFileName(files[index + 1]);
-          }
-
-          //render files quantity progress
-          loader.setStage(index);
-
-          //on files loading finish
-          if (index === files.length - 1) {
-            onLastFileLoaded();
-            // resultLabel.show();
-
-            // if ($(".result table").find("tr").length > 0) {
-            //   $(".result-block__radios button").removeAttr("disabled");
-            //   $(".result-block__radios button").first().addClass("active");
-            //   $(".result-info").show();
-            //   $(".result-block__accessories").show();
-
-            //   makeTotalTable();
-
-            //   quantityInputEventListeners.add();
-            // }
-
-            // setTimeout(() => {
-            //   loader.remove();
-            // }, 1000);
-          }
-
-          readFile(index + 1);
+        const makeWorkbook = new Promise((res, rej) => {
+          const workbook = XLSX.read(data, {
+            type: "array",
+          });
+          console.log(workbook);
+          res(workbook);
+          rej();
         });
-    };
 
-    reader.readAsArrayBuffer(file);
+        makeWorkbook.then(
+          (value) => {
+            const workbook = value;
+
+            var sheet_data = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {
+              header: 1,
+            });
+
+            const vrfTable = vrf.getOriginalTableFromDoc(sheet_data);
+
+            if (!vrfTable) {
+              alert("Error");
+            }
+
+            vrf.renderTable(vrfTable);
+
+            // const idx = sheet_data.findIndex((item) => {
+            //   return item.includes("Наименование");
+            // });
+
+            // const idx2 = sheet_data.findIndex((item) => {
+            //   const id = item.findIndex((el) => {
+            //     if (!el) return false;
+            //     el += "";
+            //     return el.includes("Итого");
+            //   });
+
+            //   return id > -1;
+            // });
+
+            // const $table = $("<table><tbody></tbody></table>");
+
+            // for (let i = idx + 2; i < idx2; i++) {
+            //   const $row = $("<tr></tr>");
+            //   const $title = $("<td></td>");
+            //   const $name = $("<td></td>");
+            //   const $empty = $("<td></td>");
+            //   const $amount = $("<td></td>");
+
+            //   if (i > 0 && sheet_data[i - 1].length === 1) {
+            //     $title.text(sheet_data[i - 1][0]);
+            //   }
+
+            //   if (sheet_data[i].length > 1) {
+            //     const nameCell = sheet_data[i][1];
+            //     const amountCell = sheet_data[i][23];
+            //     $name.text(nameCell.split(" ").slice(-1));
+            //     $amount.text(amountCell);
+            //     $row.append($title);
+            //     $row.append($name);
+            //     $row.append($empty);
+            //     $row.append($amount);
+            //     $table.append($row);
+            //   }
+            // }
+
+            // $(".upload__another-excel-table").append($table);
+
+            // console.log(idx, idx2);
+
+            //render currently loading file name
+            if (index < files.length - 1) {
+              loader.setFileName(files[index + 1]);
+            }
+
+            //render files quantity progress
+            loader.setStage(index);
+
+            //on files loading finish
+            if (index === files.length - 1) {
+              onLastFileLoaded();
+            }
+
+            readFile(index + 1);
+          },
+          (e) => {
+            console.log(e);
+            resultLabel.addFailedFilename(file.name);
+
+            //render currently loading file name
+            if (index < files.length - 1) {
+              loader.setFileName(files[index + 1]);
+            }
+
+            //render files quantity progress
+            loader.setStage(index);
+
+            //on files loading finish
+            if (index === files.length - 1) {
+              onLastFileLoaded();
+            }
+
+            readFile(index + 1);
+          }
+        );
+
+        // var workbook = XLSX.read(data, {
+        //   type: "array",
+        // });
+      };
+
+      reader.onerror = function (ex) {
+        console.log(ex);
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
   }
 
   readFile(0);
@@ -235,6 +296,11 @@ function onFileClear(e) {
   resultLabel.hide();
 
   resultBlock.hide();
+
+  $(".result__midea").hide();
+  $(".result__another-excel-table table").empty();
+  $(".result__midea-excel-table table").empty();
+
   // $(".result-block__radios button").attr("disabled", "true");
   // $(".result-block__radios button").first().removeClass("active");
   // $(".result-block__radios button").last().removeClass("active");

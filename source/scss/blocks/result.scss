@@ -63,7 +63,8 @@
 }
 
 .result-info,
-.result-total-info {
+.result-total-info,
+.result__midea {
   .save-button {
     margin: 0 0 20px;
     padding: 15px 30px;
@@ -75,6 +76,10 @@
       cursor: pointer;
     }
   }
+}
+
+.result__midea .save-button {
+  margin-top: 50px;
 }
 
 .result-info {
@@ -245,4 +250,153 @@
   background-repeat: no-repeat;
   background-size: contain;
   vertical-align: middle;
+}
+
+.result__another-excel-table,
+.result__midea-excel-table {
+  table {
+    border-collapse: collapse;
+
+    td {
+      border: 1px solid #555;
+      min-width: 50px;
+      margin: 0;
+      padding: 3px 10px;
+      font-size: 13px;
+      line-height: 15px;
+
+      &:nth-child(2) {
+        max-width: 150px;
+        word-wrap: break-word;
+      }
+    }
+
+    td[data-type="amount-single"] {
+      input {
+        max-width: 50px;
+      }
+    }
+  }
+
+  tr.alarm {
+    td {
+      background-color: #ff0000;
+    }
+  }
+
+  tr.danger {
+    background-color: #ffbb00;
+  }
+}
+
+.result__another-excel-table {
+  margin-right: 25px;
+}
+
+.result__midea-wrap {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.result__midea-excel-table {
+  th {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 5px;
+  }
+
+  td.status {
+    border-color: transparent;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  td.ODUstatus {
+    span {
+      background-color: #00ff00;
+      padding: 0 5px;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
+
+      &.alarm {
+        background-color: #ff6666;
+      }
+    }
+  }
+
+  td.oldName {
+    color: #aaa;
+  }
+
+  .status {
+    display: flex;
+
+    .overload,
+    .underload,
+    .wrongType,
+    .failedType {
+      display: none;
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      border-radius: 3px;
+      background-color: #ccc;
+      background-size: 90% auto;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .overload {
+      background-color: #ffcb9e;
+      background-image: url("../img/overload.svg");
+    }
+
+    .underload {
+      transform: rotate(180deg);
+      background-color: #c0c0ff;
+      background-image: url("../img/overload.svg");
+    }
+
+    .wrongType {
+      background-color: #fc8b13;
+      background-image: url("../img/change.svg");
+    }
+
+    .failedType {
+      background-color: #ff2121;
+      background-image: url("../img/change.svg");
+    }
+  }
+
+  tr.overload {
+    .overload {
+      display: block;
+    }
+  }
+
+  tr.underload {
+    .underload {
+      display: block;
+    }
+  }
+
+  tr.wrongType {
+    .wrongType {
+      display: block;
+    }
+  }
+
+  tr.failedType {
+    .failedType {
+      display: block;
+    }
+  }
+
+  tr.joint td[data-type="name"] {
+    background-color: #ccc;
+  }
 }

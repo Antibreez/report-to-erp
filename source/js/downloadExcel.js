@@ -15,3 +15,9 @@ $("#button-ppd").on("click", function () {
     name: "table",
   });
 });
+
+$("#button-midea").on("click", function () {
+  $(".result__midea-excel-table table").table2excel({
+    name: "table",
+  });
+});
