@@ -106,18 +106,12 @@ function getOriginalTableFromDoc(data) {
   });
 
   const $titleRow = $('<tr class="noExl"></tr>');
-  const $statusTitle = $("<th>Статус системы</th>");
-  const $nameTitle = $("<th>Название системы</th>");
-  const $itemTitle = $("<th>Наименование</th>");
-  const $amountTitle = $("<th>Кол-во<br/>общ.</th>");
-  const $amountSingleTitle = $("<th>Кол-во<br/>1 сист.</th>");
-  $titleRow.append($statusTitle);
-  $titleRow.append($nameTitle);
-  $titleRow.append($itemTitle);
+  $titleRow.append($("<th>Название системы</th>"));
+  $titleRow.append($("<th>Исх. наименование</th>"));
+  $titleRow.append($("<th>Наименование</th>"));
   $titleRow.append($("<th></th>"));
-  $titleRow.append($("<th></th>"));
-  $titleRow.append($amountSingleTitle);
-  $titleRow.append($amountTitle);
+  $titleRow.append($("<th>Кол-во<br/>общ.</th>"));
+  $titleRow.append($("<th>Кол-во<br/>1 сист.</th>"));
   $titleRow.append($("<th></th>"));
   $titleRow.append($("<th></th>"));
   newTable += $titleRow.prop("outerHTML");
@@ -148,10 +142,15 @@ function getOriginalTableFromDoc(data) {
           data-systems='${info.systemsAmount}'
         ></tr>`);
 
+        console.log("####indoorInitIndx", el.indoorInitIndx);
+
         el.type === "joint" && $row.addClass("joint");
-        el.alarm && $row.addClass(el.alarm);
+        //el.alarm && $row.addClass(el.alarm);
         el.type && $row.attr("data-type", el.type);
         el.indoorIndx && $row.attr("data-indoor-indx", el.indoorIndx);
+        el.indoorType && $row.attr("data-indoor-type", el.indoorType);
+        el.indoorInitIndx && $row.attr("data-indoor-init-indx", el.indoorInitIndx);
+        el.indoorInitType && $row.attr("data-indoor-init-type", el.indoorInitType);
         el.panel && $row.attr("data-indoor-panel", el.panel);
         el.outdoorMaxIndx && $row.attr("data-outdoor-maxindx", el.outdoorMaxIndx);
         el.outdoorMaxIDU && $row.attr("data-outdoor-maxamount", el.outdoorMaxIDU);
@@ -161,21 +160,36 @@ function getOriginalTableFromDoc(data) {
           $row.css("display", "none");
         }
 
-        const $ODUstatus = $('<td class="noExl ODUstatus"></td>');
+        let currentLoad = "";
+        let currentIndoors = "";
 
-        if (idx === 0) {
-          $ODUstatus.append(
-            `<span class='${info.totalAmount > info.maxAmount ? "alarm" : ""}'>
-              В/Б <b>${info.totalAmount} / ${info.maxAmount}</b>
-            </span>`
-          );
+        if (el.type === "outdoor") {
+          if (info.totalAmount > info.maxAmount) {
+            currentIndoors = `${info.totalAmount}/${info.maxAmount}`;
+            $row.addClass("maxIndoorsExceed");
+          }
 
-          $ODUstatus.append(
-            `<span class='${load > 130 ? "alarm" : ""}'>
-              <b>${load}%</b>
-            </span>`
-          );
+          if (load > 130) {
+            currentLoad = `${load}%`;
+            $row.addClass("maxLoadExceed");
+          }
         }
+
+        // const $ODUstatus = $('<td class="noExl ODUstatus"></td>');
+
+        // if (idx === 0) {
+        //   $ODUstatus.append(
+        //     `<span class='${info.totalAmount > info.maxAmount ? "alarm" : ""}'>
+        //       В/Б <b>${info.totalAmount} / ${info.maxAmount}</b>
+        //     </span>`
+        //   );
+
+        //   $ODUstatus.append(
+        //     `<span class='${load > 130 ? "alarm" : ""}'>
+        //       <b>${load}%</b>
+        //     </span>`
+        //   );
+        // }
 
         const $title = $(`<td>${el.title}</td>`);
         const $name = $(`<td data-type="name">${el.name}</td>`);
@@ -189,16 +203,30 @@ function getOriginalTableFromDoc(data) {
         const $amount = $(`<td data-type='amount'>${el.amount}</td>`);
         const $amountSingle = $(`<td class='noExl' data-type='amount-single'></td>`);
         const $status = $(`<td class="noExl status">
-          <div class="status">
-            <div class="overload"></div>
-            <div class="underload"></div>
-            <div class="wrongType"></div>
+          <div class="status-inner">
+            <div class="overload"><b>индекс блока больше исходного</b></div>
+            <div class="underload"><b>индекс блока меньше исходного</b></div>
+            <div class="wrongType"><b>тип блока отличается от исходного</b></div>
+            <div class="maxLoadExceed"><b>Загрузка ${currentLoad}</b></div>
+            <div class="maxIndoorsExceed"><b>Макс. ВБ ${currentIndoors}</b></div>
           </div>
         </td>`);
 
         const $select = $('<td class="noExl select"></td>');
 
         if (el.type === "indoor") {
+          if (el.indoorIndx > el.indoorInitIndx) {
+            $row.addClass("overload");
+          }
+
+          if (el.indoorIndx < el.indoorInitIndx) {
+            $row.addClass("underload");
+          }
+
+          if (el.indoorType !== el.indoorInitType) {
+            $row.addClass("wrongType");
+          }
+
           $amountSingle.append(`<input type='number' class='input-amount' value='${el.amount / info.systemsAmount}'></input>`);
 
           const $selectInner = $(`<select class='select-indoor'></select>`);
@@ -213,6 +241,7 @@ function getOriginalTableFromDoc(data) {
                 <option
                   value='${units[elKey].name}' ${units[elKey].name === el.name ? "selected" : ""}
                   data-indoor-indx='${units[elKey].indx}'
+                  data-indoor-type='${units[elKey].type}'
                 >${units[elKey].name}</option>
               `);
 
@@ -231,15 +260,15 @@ function getOriginalTableFromDoc(data) {
           $addNewRow.append('<button class="add-new">Дублировать строку</button>');
         }
 
-        $row.append($ODUstatus);
+        //$row.append($ODUstatus);
         $row.append($title);
-        $row.append($name);
         $row.append($oldName);
+        $row.append($name);
         $row.append($empty);
-        $row.append($amountSingle);
         $row.append($amount);
+        $row.append($amountSingle);
         $row.append($select);
-        $row.append($addNewRow);
+        //$row.append($addNewRow);
         $row.append($status);
         newTable += $row.prop("outerHTML");
       });
