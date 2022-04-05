@@ -2,12 +2,24 @@ import midea from "./midea";
 import { MIDEA_INDOORS, MIDEA_OUTDOORS } from "./midea_data";
 import mideaEvents from "./mideaEvents";
 
+let amountColumnId = -1;
+
 function getUsefullArr(data) {
   // console.log("#####data: ", removeEmptyCells(data));
   // console.log("#####data: ", data);
 
   const newData = removeEmptyCells(data);
   console.log("####data: ", newData);
+
+  const x = newData.findIndex((item) => {
+    return item.includes("Наименование");
+  });
+
+  const y = newData[x].findIndex((item) => {
+    return item.includes("Оборудование");
+  });
+
+  amountColumnId = y + 1;
 
   const idx = newData.findIndex((item) => {
     return item.includes("Цена");
@@ -79,7 +91,7 @@ function getOriginalTableFromDoc(data) {
 
     if (item.length > 1) {
       const nameCell = item[1];
-      const amountCell = item[3];
+      const amountCell = item[amountColumnId];
       // $name.text(nameCell.split(" ").slice(-1));
       // $amount.text(amountCell);
 
