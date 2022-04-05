@@ -80,6 +80,7 @@
 
 .result__midea .save-button {
   margin-top: 50px;
+  align-self: flex-start;
 }
 
 .result-info {
@@ -297,6 +298,7 @@
   padding-top: 50px;
   padding-bottom: 50px;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
 }
 
@@ -315,6 +317,7 @@
     border-color: transparent;
     padding-top: 0;
     padding-bottom: 0;
+    background-color: #fff;
   }
 
   td.ODUstatus {
@@ -387,42 +390,48 @@
   tr.overload {
     .overload {
       display: block;
-      border: 1px solid black;
+      border: 1px solid #ff0000;
+      color: #ff0000;
     }
   }
 
   tr.underload {
     .underload {
       display: block;
-      border: 1px solid black;
+      border: 1px solid #ff0000;
+      color: #ff0000;
     }
   }
 
   tr.wrongType {
     .wrongType {
       display: block;
-      border: 1px solid black;
+      border: 1px solid #ff0000;
+      color: #ff0000;
     }
   }
 
   tr.failedType {
     .failedType {
       display: block;
-      border: 1px solid black;
+      border: 1px solid #ff0000;
+      color: #ff0000;
     }
   }
 
   tr.maxIndoorsExceed {
     .maxIndoorsExceed {
       display: block;
-      border: 1px solid black;
+      border: 1px solid #ff0000;
+      color: #ff0000;
     }
   }
 
   tr.maxLoadExceed {
     .maxLoadExceed {
       display: block;
-      border: 1px solid black;
+      border: 1px solid #ff0000;
+      color: #ff0000;
     }
   }
 

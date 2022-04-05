@@ -1,5 +1,5 @@
 import midea from "./midea";
-import { MIDEA_INDOORS } from "./midea_data";
+import { MIDEA_INDOORS, MIDEA_OUTDOORS } from "./midea_data";
 import mideaEvents from "./mideaEvents";
 
 function getUsefullArr(data) {
@@ -151,29 +151,12 @@ function getOriginalTableFromDoc(data) {
         el.indoorType && $row.attr("data-indoor-type", el.indoorType);
         el.indoorInitIndx && $row.attr("data-indoor-init-indx", el.indoorInitIndx);
         el.indoorInitType && $row.attr("data-indoor-init-type", el.indoorInitType);
+        el.oldIndoor && $row.attr("data-indoor-init-name", el.oldIndoor);
         el.panel && $row.attr("data-indoor-panel", el.panel);
         el.outdoorMaxIndx && $row.attr("data-outdoor-maxindx", el.outdoorMaxIndx);
         el.outdoorMaxIDU && $row.attr("data-outdoor-maxamount", el.outdoorMaxIDU);
-
-        if (el.type === "panel" && el.amount === 0) {
-          $row.addClass("noExl");
-          $row.css("display", "none");
-        }
-
-        let currentLoad = "";
-        let currentIndoors = "";
-
-        if (el.type === "outdoor") {
-          if (info.totalAmount > info.maxAmount) {
-            currentIndoors = `${info.totalAmount}/${info.maxAmount}`;
-            $row.addClass("maxIndoorsExceed");
-          }
-
-          if (load > 130) {
-            currentLoad = `${load}%`;
-            $row.addClass("maxLoadExceed");
-          }
-        }
+        el.outdoorType && $row.attr("data-outdoor-type", el.outdoorType);
+        el.fullName && $row.attr("data-outdoor-fullname", el.fullName);
 
         // const $ODUstatus = $('<td class="noExl ODUstatus"></td>');
 
@@ -202,17 +185,61 @@ function getOriginalTableFromDoc(data) {
         const $empty = $(`<td></td>`);
         const $amount = $(`<td data-type='amount'>${el.amount}</td>`);
         const $amountSingle = $(`<td class='noExl' data-type='amount-single'></td>`);
-        const $status = $(`<td class="noExl status">
-          <div class="status-inner">
-            <div class="overload"><b>индекс блока больше исходного</b></div>
-            <div class="underload"><b>индекс блока меньше исходного</b></div>
-            <div class="wrongType"><b>тип блока отличается от исходного</b></div>
-            <div class="maxLoadExceed"><b>Загрузка ${currentLoad}</b></div>
-            <div class="maxIndoorsExceed"><b>Макс. ВБ ${currentIndoors}</b></div>
-          </div>
-        </td>`);
-
         const $select = $('<td class="noExl select"></td>');
+
+        if (el.type === "panel" && el.amount === 0) {
+          $row.addClass("noExl");
+          $row.css("display", "none");
+        }
+
+        if (el.type === "outdoorJoint" && el.amount === 0) {
+          $row.addClass("noExl");
+          $row.css("display", "none");
+        }
+
+        let currentLoad = "";
+        let currentIndoors = "";
+
+        if (el.type === "outdoor" && idx === 0) {
+          $row.attr("data-total-indx", info.totalIndex);
+          $row.attr("data-total-amount", info.totalAmount);
+
+          if (info.totalAmount > info.maxAmount) {
+            currentIndoors = `${info.totalAmount}/${info.maxAmount}`;
+            $row.addClass("maxIndoorsExceed");
+          }
+
+          if (load > 130) {
+            currentLoad = `${load}%`;
+            $row.addClass("maxLoadExceed");
+          }
+
+          const $selectInner = $(`<select class='select-outdoor'></select>`);
+
+          const outdoors = MIDEA_OUTDOORS;
+
+          Object.keys(outdoors).forEach((key) => {
+            const $group = $(`<optgroup label='${outdoors[key].title}'></optgroup>`);
+            const units = outdoors[key].units;
+            Object.keys(units).forEach((elKey) => {
+              const $option = $(`
+                <option
+                  value='${units[elKey].modules.join(",")}' ${units[elKey].name === el.fullName ? "selected" : ""}
+                  data-outdoor-maxindx='${units[elKey].maxINDEX}'
+                  data-outdoor-maxamount='${units[elKey].maxIDU}'
+                  data-outdoor-type='${units[elKey].type}'
+                  data-outdoor-joint='${units[elKey].joint}'
+                >${units[elKey].name}</option>
+              `);
+
+              units[elKey].panel && $option.attr("data-indoor-panel", units[elKey].panel);
+              $group.append($option);
+            });
+            $selectInner.append($group);
+          });
+
+          $select.append($selectInner);
+        }
 
         if (el.type === "indoor") {
           if (el.indoorIndx > el.indoorInitIndx) {
@@ -254,11 +281,21 @@ function getOriginalTableFromDoc(data) {
           $select.append($selectInner);
         }
 
-        const $addNewRow = $('<td class="noExl add-delete-block"></td>');
+        // const $addNewRow = $('<td class="noExl add-delete-block"></td>');
 
-        if (el.type === "indoor") {
-          $addNewRow.append('<button class="add-new">Дублировать строку</button>');
-        }
+        // if (el.type === "indoor") {
+        //   $addNewRow.append('<button class="add-new">Дублировать строку</button>');
+        // }
+
+        const $status = $(`<td class="noExl status">
+          <div class="status-inner">
+            <div class="overload"><b>индекс блока больше исходного</b></div>
+            <div class="underload"><b>индекс блока меньше исходного</b></div>
+            <div class="wrongType"><b>тип блока отличается от исходного</b></div>
+            <div class="maxLoadExceed"><b>Загрузка ${currentLoad}</b></div>
+            <div class="maxIndoorsExceed"><b>Макс. ВБ ${currentIndoors}</b></div>
+          </div>
+        </td>`);
 
         //$row.append($ODUstatus);
         $row.append($title);

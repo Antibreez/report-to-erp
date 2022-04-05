@@ -162,7 +162,7 @@
 //   "FXNQ50A": { unit: "MVX56T-VA1", alarm: "wrongType" },
 //   "FXNQ63A": { unit: "MVX71T-VA1", alarm: "wrongType" },
 // };
-import { MIDEA_OUTDOORS, MIDEA_INDOORS, MIDEA_CONTROLLERS, MIDEA_PANELS } from "./midea_data";
+import { MIDEA_OUTDOORS, MIDEA_INDOORS, MIDEA_CONTROLLERS, MIDEA_PANELS, MIDEA_OUTDOOR_JOINTS } from "./midea_data";
 
 // export const MIDEA_OUTDOORS = {
 //   individual: {
@@ -542,7 +542,7 @@ const OUTDOOR_UNITS = {
 //   },
 // };
 
-const INDOORS = {
+export const INDOORS = {
   general: {
     //wall
     "FXAQ15A": { unit: MIDEA_INDOORS.general.wall.units[22], initIndx: 18, initType: "wall" },
@@ -786,6 +786,7 @@ function getNewSystem(systemRows) {
   const newJointsRows = [];
   const newControllersRows = [];
   let panels = {};
+  let newOutdoorJoints = {};
 
   systemRows.forEach((row, rowIdx) => {
     const updatedOldModules = OUTDOOR_JOINTS[row.name];
@@ -824,15 +825,27 @@ function getNewSystem(systemRows) {
 
     const newModules = OUTDOOR_UNITS[oldOutdoorName].unit.modules;
 
+    const modules = {};
+
     if (newModules) {
       newModules.forEach((module) => {
+        if (!modules[module]) {
+          modules[module] = systemsAmount;
+        } else {
+          modules[module] += systemsAmount;
+        }
+      });
+
+      Object.keys(modules).forEach((key) => {
         const newRow = {
           title: "",
-          name: module,
-          amount: systemsAmount,
+          name: key,
+          fullName: OUTDOOR_UNITS[oldOutdoorName].unit.name,
+          amount: modules[key],
           type: "outdoor",
           outdoorMaxIndx: OUTDOOR_UNITS[oldOutdoorName].unit.maxINDEX,
           outdoorMaxIDU: OUTDOOR_UNITS[oldOutdoorName].unit.maxIDU,
+          outdoorType: OUTDOOR_UNITS[oldOutdoorName].unit.type,
         };
 
         newOutdoorRows.push(newRow);
@@ -842,9 +855,14 @@ function getNewSystem(systemRows) {
     newOutdoorJoint = OUTDOOR_UNITS[oldOutdoorName].unit.joint;
 
     if (newOutdoorJoint) {
-      newOutdoorJointRow.title = "";
-      newOutdoorJointRow.name = newOutdoorJoint;
-      newOutdoorJointRow.amount = systemsAmount;
+      if (!newOutdoorJoints[newOutdoorJoint]) {
+        newOutdoorJoints[newOutdoorJoint] = systemsAmount;
+      } else {
+        newOutdoorJoints[newOutdoorJoint] += systemsAmount;
+      }
+      // newOutdoorJointRow.title = "";
+      // newOutdoorJointRow.name = newOutdoorJoint;
+      // newOutdoorJointRow.amount = systemsAmount;
     }
   }
 
@@ -969,9 +987,20 @@ function getNewSystem(systemRows) {
     newSystemRows.push(row);
   });
 
-  if (newOutdoorJointRow.name) {
-    newSystemRows.push(newOutdoorJointRow);
-  }
+  // if (newOutdoorJointRow.name) {
+  //   newSystemRows.push(newOutdoorJointRow);
+  // }
+
+  MIDEA_OUTDOOR_JOINTS.forEach((joint) => {
+    const newRow = {
+      title: "",
+      name: joint,
+      amount: newOutdoorJoints[joint] ? newOutdoorJoints[joint] : 0,
+      type: "outdoorJoint",
+    };
+
+    newSystemRows.push(newRow);
+  });
 
   newControllersRows.forEach((row) => {
     newSystemRows.push(row);

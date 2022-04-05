@@ -1,4 +1,5 @@
-import { MIDEA_PANELS } from "./midea_data";
+import { MIDEA_PANELS, MIDEA_OUTDOOR_JOINTS, MIDEA_INDOORS } from "./midea_data";
+import { INDOORS } from "./midea";
 
 let focusAmount = 0;
 
@@ -31,6 +32,26 @@ function recalcPanels($outdoorRow, panels) {
     const $amount = $(row).find("[data-type='amount']");
 
     const amount = panels[name];
+
+    if (amount) {
+      $amount.text(amount);
+      $(row).removeClass("noExl");
+      $(row).removeAttr("style");
+    } else {
+      $(row).addClass("noExl");
+      $(row).css("display", "none");
+    }
+  });
+}
+
+function replaceOutdoorJoints($outdoorRow, outdoorJoints) {
+  const $outdoorJointRow = getOneTypeRows($outdoorRow, "outdoorJoint");
+
+  $outdoorJointRow.each((idx, row) => {
+    const name = $(row).find("[data-type='name']").text();
+    const $amount = $(row).find("[data-type='amount']");
+
+    const amount = outdoorJoints[name];
 
     if (amount) {
       $amount.text(amount);
@@ -101,6 +122,9 @@ function onAmountBlur() {
       if (panel) panels[panel] += amount;
     });
 
+    $outdoorRow.attr("data-total-indx", totalIndex);
+    $outdoorRow.attr("data-total-amount", totalAmount);
+
     const newLoad = Math.round((totalIndex / maxIndx) * 130);
     //$loadCell.text(`${newLoad}%`);
     if (totalIndex > maxIndx) {
@@ -126,39 +150,7 @@ function onAmountBlur() {
 
     recalcPanels($outdoorRow, panels);
 
-    // const $panelRows = $row.parents("table").find(`tr[data-type="panel"][data-systemid="${systemId}"]`);
-    // const $panelRows = getOneTypeRows($outdoorRow, "panel");
-
-    // $panelRows.each((idx, row) => {
-    //   const name = $(row).find("[data-type='name']").text();
-    //   const $amount = $(row).find("[data-type='amount']");
-
-    //   const amount = panels[name];
-
-    //   if (amount) {
-    //     $amount.text(amount);
-    //     $(row).removeClass("noExl");
-    //     $(row).removeAttr("style");
-    //   } else {
-    //     $(row).addClass("noExl");
-    //     $(row).css("display", "none");
-    //   }
-    // });
-
-    //const $controllerRows = $row.parents("table").find(`tr[data-type="controller"][data-systemid="${systemId}"]`);
     recalcCotrollers($outdoorRow, totalAmount * systemAmount);
-
-    // const $controllerRows = getOneTypeRows($outdoorRow, "controller");
-
-    // $controllerRows.each((idx, row) => {
-    //   $(row)
-    //     .find('[data-type="amount"]')
-    //     .text(totalAmount * systemAmount);
-
-    //   if (idx > 0) {
-    //     $(row).find('[dat-type="amount"]').text(0);
-    //   }
-    // });
   }
 }
 
@@ -247,6 +239,195 @@ function onIndoorChange() {
   //     $(row).css("display", "none");
   //   }
   // });
+}
+
+function onOutdoorChange() {
+  const $outdoorRow = $(this).parents("tr").first();
+  $outdoorRow
+    .nextUntil(function () {
+      return $(this).attr("data-type") !== "outdoor";
+    })
+    .each((idx, item) => {
+      $(item).remove();
+    });
+
+  const systemAmount = +$outdoorRow.attr("data-systems");
+  const modules = $(this).val().split(",");
+  const outdoorJoint = $("option:selected", this).attr("data-outdoor-joint");
+
+  const combinedModules = {};
+
+  modules.forEach((module) => {
+    if (!combinedModules[module]) {
+      combinedModules[module] = systemAmount;
+    } else {
+      combinedModules[module] += systemAmount;
+    }
+  });
+
+  const prevOutdoorType = $outdoorRow.attr("data-outdoor-type");
+
+  const $nameCell = $(this).parents("td").siblings('[data-type="name"]');
+  const $amountCell = $(this).parents("td").siblings('[data-type="amount"]');
+  const newMaxIndx = $("option:selected", this).attr("data-outdoor-maxindx");
+  const newMaxAmount = $("option:selected", this).attr("data-outdoor-amount");
+  const newOutdoorType = $("option:selected", this).attr("data-outdoor-type");
+
+  Object.keys(combinedModules).forEach((key, idx) => {
+    if (idx === 0) {
+      $nameCell.text(key);
+      $amountCell.text(combinedModules[key]);
+      $outdoorRow.attr("data-outdoor-maxindx", newMaxIndx);
+      $outdoorRow.attr("data-outdoor-maxamount", newMaxAmount);
+      $outdoorRow.attr("data-outdoor-fullname", $("option:selected", this).attr("data-outdoor-fullname"));
+      $outdoorRow.attr("data-outdoor-type", newOutdoorType);
+    } else {
+      const $newRow = $outdoorRow.clone(false, false);
+      $newRow.find("td.select").empty();
+      $newRow.find("td").first().empty();
+      $newRow.find('[data-type="name"]').text(key);
+      $newRow.find('[data-type="amount"]').text(combinedModules[key]);
+      $outdoorRow.after($newRow);
+    }
+  });
+
+  const outdoorJoints = {};
+
+  MIDEA_OUTDOOR_JOINTS.forEach((outdoorJoint) => {
+    outdoorJoints[outdoorJoint] = 0;
+  });
+
+  outdoorJoints[outdoorJoint] = systemAmount;
+
+  replaceOutdoorJoints($outdoorRow, outdoorJoints);
+
+  let totalIndx = +$outdoorRow.attr("data-total-indx");
+  let totalAmount = +$outdoorRow.attr("data-total-amount");
+
+  if (newOutdoorType === "atom" && prevOutdoorType !== "atom") {
+    let totalIndx = 0;
+    const panels = {};
+
+    MIDEA_PANELS.forEach((panel) => {
+      panels[panel] = 0;
+    });
+
+    const $indoorRows = getOneTypeRows($outdoorRow, "indoor");
+
+    $indoorRows.each((idx, row) => {
+      const initName = $(row).attr("data-indoor-init-name");
+      const unit = INDOORS.atom[initName].unit;
+      console.log(unit.name);
+      $(row).children('[data-type="name"]').text(unit.name);
+      $(row).attr("data-indoor-indx", unit.indx);
+      $(row).attr("data-indoor-type", unit.type);
+
+      const $selectInner = $(row).find(".select-indoor");
+      const $selectInnerEl = $("<div></div>");
+      $selectInner.empty();
+
+      const indoors = MIDEA_INDOORS.atom;
+
+      Object.keys(indoors).forEach((key) => {
+        const $group = $(`<optgroup label='${indoors[key].title}'></optgroup>`);
+        const units = indoors[key].units;
+        Object.keys(units).forEach((elKey) => {
+          const $option = $(`
+            <option
+              value='${units[elKey].name}' ${units[elKey].name === unit.name ? "selected" : ""}
+              data-indoor-indx='${units[elKey].indx}'
+              data-indoor-type='${units[elKey].type}'
+            >${units[elKey].name}</option>
+          `);
+
+          units[elKey].panel && $option.attr("data-indoor-panel", units[elKey].panel);
+          $group.append($option);
+        });
+        $selectInnerEl.append($group);
+      });
+
+      $selectInner.append($selectInnerEl.html());
+
+      const amount = +$(row).children('[data-type="amount"]').text();
+      totalIndx += +$(row).attr("data-indoor-indx") * (amount / systemAmount);
+
+      const panel = $(row).attr("data-indoor-panel");
+
+      if (panel) panels[panel] += amount;
+    });
+
+    recalcPanels($outdoorRow, panels);
+  }
+
+  if (newOutdoorType !== "atom" && prevOutdoorType === "atom") {
+    let totalIndx = 0;
+    const panels = {};
+
+    MIDEA_PANELS.forEach((panel) => {
+      panels[panel] = 0;
+    });
+
+    const $indoorRows = getOneTypeRows($outdoorRow, "indoor");
+
+    $indoorRows.each((idx, row) => {
+      const initName = $(row).attr("data-indoor-init-name");
+      const unit = INDOORS.general[initName].unit;
+      $(row).children('[data-type="name"]').text(unit.name);
+      $(row).attr("data-indoor-indx", unit.indx);
+      $(row).attr("data-indoor-type", unit.type);
+
+      const $selectInner = $(row).find(".select-indoor");
+      const $selectInnerEl = $("<div></div>");
+      $selectInner.empty();
+
+      const indoors = MIDEA_INDOORS.general;
+
+      Object.keys(indoors).forEach((key) => {
+        const $group = $(`<optgroup label='${indoors[key].title}'></optgroup>`);
+        const units = indoors[key].units;
+        Object.keys(units).forEach((elKey) => {
+          const $option = $(`
+            <option
+              value='${units[elKey].name}' ${units[elKey].name === unit.name ? "selected" : ""}
+              data-indoor-indx='${units[elKey].indx}'
+              data-indoor-type='${units[elKey].type}'
+            >${units[elKey].name}</option>
+          `);
+
+          units[elKey].panel && $option.attr("data-indoor-panel", units[elKey].panel);
+          $group.append($option);
+        });
+        $selectInnerEl.append($group);
+      });
+
+      $selectInner.append($selectInnerEl.html());
+
+      const amount = +$(row).children('[data-type="amount"]').text();
+      totalIndx += +$(row).attr("data-indoor-indx") * (amount / systemAmount);
+
+      const panel = $(row).attr("data-indoor-panel");
+
+      if (panel) panels[panel] += amount;
+    });
+
+    recalcPanels($outdoorRow, panels);
+  }
+
+  if (totalIndx > newMaxIndx) {
+    const load = Math.round((totalIndx / newMaxIndx) * 130);
+    $outdoorRow.find(".maxLoadExceed b").text(`Загрузка ${load}%`);
+    $outdoorRow.addClass("maxLoadExceed");
+  } else {
+    $outdoorRow.removeClass("maxLoadExceed");
+  }
+
+  if (totalAmount > newMaxAmount) {
+    const amount = `${totalAmount}/${newMaxAmount}`;
+    $outdoorRow.find(".maxIndoorsExceed b").text(`Макс. ВБ ${amount}`);
+    $outdoorRow.addClass("maxIndoorsExceed");
+  } else {
+    $outdoorRow.removeClass("maxIndoorsExceed");
+  }
 }
 
 function onAddNewRow() {
@@ -379,6 +560,7 @@ function onRemoveRow() {
 
 function addEventListeners() {
   const $selectIndoor = $(".result__midea-excel-table table .select-indoor");
+  const $selectOutdoor = $(".result__midea-excel-table table .select-outdoor");
   const $amountInput = $(".result__midea-excel-table table .input-amount");
   const $addBtn = $(".result__midea-excel-table table .add-new");
 
@@ -386,6 +568,7 @@ function addEventListeners() {
   $amountInput.on("focus", onAmountFocus);
   $amountInput.on("blur", onAmountBlur);
   $amountInput.on("keypress", onEnterPress);
+  $selectOutdoor.on("change", onOutdoorChange);
   $addBtn.on("click", onAddNewRow);
 }
 

@@ -342,3 +342,5 @@ export const MIDEA_CONTROLLERS = {
   wired: "WDC-86E/KD",
   infrared: "RM12F",
 };
+
+export const MIDEA_OUTDOOR_JOINTS = ["KJRT02E", "FQZHW-02N1E"];
