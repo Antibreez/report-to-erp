@@ -704,7 +704,7 @@ input[type="number"]::-webkit-outer-spin-button {
     border: none; }
     .result-block__radios button:not(:disabled):hover {
       cursor: pointer; }
-    .result-block__radios button:first-child {
+    .result-block__radios button:not(:last-child) {
       margin-right: 20px; }
     .result-block__radios button.active {
       border-bottom: 2px solid #888; }
@@ -719,20 +719,40 @@ input[type="number"]::-webkit-outer-spin-button {
     color: red; }
 
 .result-block__refnets {
-  margin: 0 0 10px; }
+  margin: 0 0 15px; }
   .result-block__refnets label:hover {
     cursor: pointer; }
 
+.result-block__controllers {
+  margin: 0 0 15px; }
+  .result-block__controllers label {
+    display: block; }
+    .result-block__controllers label:hover {
+      cursor: pointer; }
+    .result-block__controllers label:not(:last-child) {
+      margin-bottom: 10px; }
+
+.result-block__controllers-title {
+  margin: 0 0 10px;
+  font-weight: bold; }
+
 .result-info .save-button,
-.result-total-info .save-button {
+.result-total-info .save-button,
+.result__midea .save-button {
   margin: 0 0 20px;
   padding: 15px 30px;
   border: none;
   background-color: #2858ff;
   color: #fff; }
   .result-info .save-button:hover,
-  .result-total-info .save-button:hover {
+  .result-total-info .save-button:hover,
+  .result__midea .save-button:hover {
     cursor: pointer; }
+
+.result__midea .save-button {
+  margin-top: 50px;
+  -ms-flex-item-align: start;
+      align-self: flex-start; }
 
 .result-info i {
   display: block;
@@ -770,6 +790,229 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .result table input {
   background-color: #f4f4f8; }
+
+.result-ppd .save-button {
+  display: block;
+  margin: 0 0 20px;
+  padding: 15px 30px;
+  border: none;
+  background-color: #2858ff;
+  color: #fff; }
+  .result-ppd .save-button:hover {
+    cursor: pointer; }
+
+.result-ppd .save-button-light {
+  display: inline-block;
+  margin: 0 0 20px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #fff;
+  color: #2858ff;
+  border: 2px solid #2858ff; }
+  .result-ppd .save-button-light:hover {
+    cursor: pointer; }
+
+.result-ppd button#make-ppd-group {
+  display: block;
+  font-weight: bold; }
+
+.result-ppd__options {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 0 0 50px;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start; }
+  .result-ppd__options label {
+    display: inline-block;
+    padding-right: 16px;
+    padding-left: 5px; }
+    .result-ppd__options label:not(:last-child) {
+      margin-bottom: 5px; }
+    .result-ppd__options label.group {
+      border-left: 1px solid #999; }
+    .result-ppd__options label.group-first {
+      border-top: 1px solid #999; }
+    .result-ppd__options label.group-last {
+      border-bottom: 1px solid #999; }
+
+.result-ppd table {
+  border-collapse: collapse; }
+  .result-ppd table td {
+    border: 1px solid #555; }
+  .result-ppd table p {
+    min-width: 50px;
+    margin: 0;
+    padding: 3px 10px;
+    font-size: 13px;
+    line-height: 15px; }
+
+.result-ppd__title {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 600;
+  margin: 0 0 20px; }
+
+.result-ppd__sub-title {
+  font-size: 20px;
+  line-height: 26px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: red;
+  max-width: 1000px; }
+
+.result-ppd__messages {
+  margin: 0 0 20px; }
+  .result-ppd__messages div {
+    max-width: 700px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 18px;
+    color: red;
+    font-weight: bold;
+    font-style: italic; }
+
+.mouse-img {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-image: url("../img/mouse-left-click.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  vertical-align: middle; }
+
+.result__another-excel-table table,
+.result__midea-excel-table table {
+  border-collapse: collapse; }
+  .result__another-excel-table table td,
+  .result__midea-excel-table table td {
+    border: 1px solid #555;
+    min-width: 50px;
+    margin: 0;
+    padding: 3px 10px;
+    font-size: 13px;
+    line-height: 15px; }
+    .result__another-excel-table table td:nth-child(1),
+    .result__midea-excel-table table td:nth-child(1) {
+      max-width: 150px;
+      word-wrap: break-word; }
+  .result__another-excel-table table td[data-type="amount-single"] input,
+  .result__midea-excel-table table td[data-type="amount-single"] input {
+    max-width: 50px; }
+
+.result__another-excel-table tr.alarm td,
+.result__midea-excel-table tr.alarm td {
+  background-color: #ff0000; }
+
+.result__another-excel-table tr.danger,
+.result__midea-excel-table tr.danger {
+  background-color: #ffbb00; }
+
+.result__another-excel-table {
+  margin-right: 25px; }
+
+.result__midea-wrap {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap; }
+
+.result__midea-excel-table th:not(:last-child) {
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0 5px;
+  border: 1px solid black;
+  background-color: #ccc; }
+
+.result__midea-excel-table td.status {
+  border-color: transparent;
+  padding-top: 0;
+  padding-bottom: 0;
+  background-color: #fff; }
+
+.result__midea-excel-table td.ODUstatus span {
+  background-color: #00ff00;
+  padding: 0 5px; }
+  .result__midea-excel-table td.ODUstatus span:not(:last-child) {
+    margin-right: 10px; }
+  .result__midea-excel-table td.ODUstatus span.alarm {
+    background-color: #ff6666; }
+
+.result__midea-excel-table td.oldName {
+  color: blue; }
+
+.result__midea-excel-table .status-inner {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+  .result__midea-excel-table .status-inner div:not(:last-child) {
+    margin-right: 10px; }
+  .result__midea-excel-table .status-inner .overload,
+  .result__midea-excel-table .status-inner .underload,
+  .result__midea-excel-table .status-inner .wrongType,
+  .result__midea-excel-table .status-inner .failedType,
+  .result__midea-excel-table .status-inner .maxIndoorsExceed,
+  .result__midea-excel-table .status-inner .maxLoadExceed {
+    display: none;
+    padding: 1px 5px; }
+
+.result__midea-excel-table tr[data-type="outdoor"] .maxLoadExceed {
+  display: block;
+  border: 1px solid #000000; }
+
+.result__midea-excel-table tr.overload .overload {
+  display: block;
+  border: 1px solid #ff0000;
+  color: #ff0000; }
+
+.result__midea-excel-table tr.underload .underload {
+  display: block;
+  border: 1px solid #ff0000;
+  color: #ff0000; }
+
+.result__midea-excel-table tr.wrongType .wrongType {
+  display: block;
+  border: 1px solid #ff0000;
+  color: #ff0000; }
+
+.result__midea-excel-table tr.failedType .failedType {
+  display: block;
+  border: 1px solid #ff0000;
+  color: #ff0000; }
+
+.result__midea-excel-table tr.maxIndoorsExceed .maxIndoorsExceed {
+  display: block;
+  border: 1px solid #ff0000;
+  color: #ff0000; }
+
+.result__midea-excel-table tr.maxLoadExceed .maxLoadExceed {
+  border-color: #ff0000;
+  color: #ff0000; }
+
+.result__midea-excel-table tr.overload,
+.result__midea-excel-table tr.underload,
+.result__midea-excel-table tr.wrongType,
+.result__midea-excel-table tr.maxIndoorsExceed,
+.result__midea-excel-table tr.maxLoadExceed {
+  background-color: #ff0000; }
+
+.result__midea-excel-table tr.joint td[data-type="name"] {
+  background-color: #ccc; }
 
 .upload-page {
   padding: 50px 0; }
@@ -979,3 +1222,66 @@ input[type="number"]::-webkit-outer-spin-button {
     content: "---";
     display: inline-block;
     margin-left: 5px; }
+
+.upload__guide .overload,
+.upload__guide .underload,
+.upload__guide .wrongType,
+.upload__guide .failedType {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  border-radius: 3px;
+  background-color: #ccc;
+  background-size: 90% auto;
+  background-repeat: no-repeat;
+  background-position: center; }
+
+.upload__guide .overload {
+  background-color: #ffcb9e;
+  background-image: url("../img/overload.svg"); }
+
+.upload__guide .underload {
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+  background-color: #c0c0ff;
+  background-image: url("../img/overload.svg"); }
+
+.upload__guide .wrongType {
+  background-color: #fc8b13;
+  background-image: url("../img/change.svg"); }
+
+.upload__guide .failedType {
+  background-color: #ff2121;
+  background-image: url("../img/change.svg"); }
+
+.upload__guide .IDUamount {
+  background-color: #00ff00;
+  padding: 0 10px;
+  margin-right: 5px; }
+  .upload__guide .IDUamount.alarm {
+    background-color: #ff6666; }
+
+.upload__guide .noMatch {
+  width: 100px;
+  margin-right: 10px;
+  text-align: center;
+  background-color: #ff0000; }
+
+.upload__guide-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0 0 20px; }
+
+.upload__midea-title-img {
+  width: 100%;
+  max-width: 300px;
+  height: 130px;
+  margin: 0 auto;
+  background-image: url("../img/midea-title-img.png");
+  background-repeat: no-repeat;
+  background-size: contain; }

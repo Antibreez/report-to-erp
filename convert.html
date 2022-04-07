@@ -1,0 +1,33 @@
+<!DOCTYPE html><html class="page" lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="shortcut icon" href="https://faviconka.ru/ico/1/faviconka.ru_1_116474.ico" type="image/x-icon"><link rel="icon" href="https://faviconka.ru/ico/1/faviconka.ru_1_116474.ico" type="image/x-icon"><link rel="stylesheet" href="css/style.min.css"><link rel="preload" href="./fonts/montserrat-v23-latin_cyrillic-regular.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="./fonts/montserrat-v23-latin_cyrillic-200.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="./fonts/montserrat-v23-latin_cyrillic-600.woff2" as="font" type="font/woff2" crossorigin><title>Конвертация</title></head><body><div class="upload-page upload-page--excel"><div class="container"><div class="upload"><div class="upload__main-title-block"><h1 class="upload__main-title">Конвертация ТКП на VRV Daikin в спецификацию VRF Midea</h1><div class="upload__midea-title-img"></div></div><div><h2>Совместимые системы на данный момент:</h2><ul><li>RXYQ-U >>> V6(V6i)</li><li>VRV mini/compact >>> VRF Mini C / VRF mini ATOM B</li></ul></div><div class="upload__input-wrap"><label class="upload__label" data-input="0"><input type="file" accept="xlsx" name="file-0" class="upload__input visually-hidden" multiple="multiple"><p class="upload__title">Нажмите на эту область, чтобы загрузить файлы или перетащите их сюда. *<br><!-- <span>
+                  * Выбирать и перетаскивать можно сразу несколько файлов.
+                </span>
+                <span>* Файлы можно добавлять к уже загруженным.</span> --></p><p class="upload__desc">Файлы .xlsx</p></label></div><div class="upload__guide"><h2 class="upload__guide-title">Условные обозначения различий в спецификациях:</h2><!-- <div class="upload__guide-item">
+              <div class="overload"></div>
+              <span> - Внутренний блок переразмерен по индексам по сравнению с исходным</span>
+            </div>
+            <div class="upload__guide-item">
+              <div class="underload"></div>
+              <span> - Внутренний блок недоразмерен по индексам по сравнению с исходным</span>
+            </div>
+            <div class="upload__guide-item">
+              <div class="wrongType"></div>
+              <span> - Несоответствие типа внутреннего блока с исходным</span>
+            </div>
+            <div class="upload__guide-item">
+              <div class="IDUamount">В/Б <b>23/64</b></div>
+              <span> - Количество внутренних блоков соответствует допустимому</span>
+            </div>
+            <div class="upload__guide-item">
+              <div class="IDUamount alarm">В/Б <b>12/9</b></div>
+              <span> - Количество внутренних блоков больше допустимого</span>
+            </div>
+            <div class="upload__guide-item">
+              <div class="IDUamount"><b>119%</b></div>
+              <span> - Загрузка системы соответствует допустимой</span>
+            </div>
+            <div class="upload__guide-item">
+              <div class="IDUamount alarm"><b>135%</b></div>
+              <span> - Загрузка системы больше допустимой</span>
+            </div> --><div class="upload__guide-item"><div class="noMatch">FTYN25L</div><span>- Позиция из оригинальной спецификации не была перенесена в новую</span></div></div><div class="upload__input-results"><div class="upload__result" data-result="0"><div class="upload__name">Файлы загружены<div class="upload__failed-files-block" style="display: none"><p class="upload__failed-files-title">В этих файлах системы не найдены:</p><div class="upload__failed-files"></div></div></div><button type="button" class="upload__close upload__close-refresh"><b>Очистить</b><!-- <svg class="upload__close-icon" role="img" width="24" height="24">
+                  <use xlink:href="img/sprite.svg#icon-close_small"></use>
+                </svg> --></button></div></div><div class="result__midea" style="display: none"><div class="result__midea-wrap"><div class="result__another-excel-table"><h3>Исходная спецификация</h3><table></table></div><button class="save-button" id="button-midea">Скачать</button><div class="result__midea-excel-table"><h3>Результат</h3><table></table></div></div></div><div class="loader"><div class="lds-dual-ring"></div><div class="loader__count"><span class="loader__count-label"><span>Файлы:&nbsp;</span></span> <span class="loader__count-current"></span>/<span class="loader__count-max"></span><div class="loader__filename"><span></span><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div></div><div class="loader__bar"></div></div></div></div></div><div class="preloader"><div class="lds-dual-ring"></div></div><div class="modal" id="error-modal"><div class="modal__blackout"><div class="modal__content"><h2 class="modal__title">Внимание!</h2><div class="modal__text"><span>В этих загруженных файлах системы не найдены:</span><div class="modal__failed-files"></div></div><button type="button" class="modal__button">Закрыть</button></div></div></div><script src="js/main.min.js"></script></body></html>
