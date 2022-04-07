@@ -771,7 +771,7 @@ function getNewSystem(systemRows) {
   let oldOutdoorSplitName = [];
   let oldOutdoorName;
 
-  let systemsAmount = 0;
+  let systemsAmount = 1;
   let totalSystemIDU = 0;
   let maxNewOutdoorIDU = 0;
   let totalIDUIndx = 0;
@@ -846,6 +846,7 @@ function getNewSystem(systemRows) {
           outdoorMaxIndx: OUTDOOR_UNITS[oldOutdoorName].unit.maxINDEX,
           outdoorMaxIDU: OUTDOOR_UNITS[oldOutdoorName].unit.maxIDU,
           outdoorType: OUTDOOR_UNITS[oldOutdoorName].unit.type,
+          outdoorInitName: oldOutdoorName,
         };
 
         newOutdoorRows.push(newRow);

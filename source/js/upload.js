@@ -145,8 +145,8 @@ function readmultifiles(input, files) {
 
             const vrfTable = vrf.getOriginalTableFromDoc(sheet_data);
 
-            if (!vrfTable) {
-              alert("Error");
+            if (!vrfTable[0]) {
+              resultLabel.addFailedFilename(file.name);
             }
 
             vrf.renderTable(vrfTable);

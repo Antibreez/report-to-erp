@@ -126,15 +126,14 @@ function onAmountBlur() {
     $outdoorRow.attr("data-total-amount", totalAmount);
 
     const newLoad = Math.round((totalIndex / maxIndx) * 130);
+    $loadAlarmCell.text(`Загрузка ${newLoad}%`);
     //$loadCell.text(`${newLoad}%`);
     if (totalIndex > maxIndx) {
       $outdoorRow.addClass("maxLoadExceed");
-      $loadAlarmCell.text(`Загрузка ${newLoad}%`);
       //$loadCell.parent().addClass("alarm");
     } else {
       //$loadCell.parent().removeClass("alarm");
       $outdoorRow.removeClass("maxLoadExceed");
-      $loadAlarmCell.text(``);
     }
 
     //$amountCell.text(`${totalAmount} / ${maxIDU}`);
@@ -209,15 +208,15 @@ function onIndoorChange() {
   });
 
   const newLoad = Math.round((totalIndex / maxIndx) * 130);
+
+  $loadAlarmCell.text(`Загрузка ${newLoad}%`);
   //$loadCell.text(`${newLoad}%`);
   if (totalIndex > maxIndx) {
     //$loadCell.parent().addClass("alarm");
     $outdoorRow.addClass("maxLoadExceed");
-    $loadAlarmCell.text(`Загрузка ${newLoad}%`);
   } else {
     //$loadCell.parent().removeClass("alarm");
     $outdoorRow.removeClass("maxLoadExceed");
-    $loadAlarmCell.text(``);
   }
 
   recalcPanels($outdoorRow, panels);
@@ -413,17 +412,19 @@ function onOutdoorChange() {
     recalcPanels($outdoorRow, panels);
   }
 
+  const load = Math.round((totalIndx / newMaxIndx) * 130);
+  $outdoorRow.find(".maxLoadExceed b").text(`Загрузка ${load}%`);
+
   if (totalIndx > newMaxIndx) {
-    const load = Math.round((totalIndx / newMaxIndx) * 130);
-    $outdoorRow.find(".maxLoadExceed b").text(`Загрузка ${load}%`);
     $outdoorRow.addClass("maxLoadExceed");
   } else {
     $outdoorRow.removeClass("maxLoadExceed");
   }
 
+  const amount = `${totalAmount}/${newMaxAmount}`;
+  $outdoorRow.find(".maxIndoorsExceed b").text(`Макс. ВБ ${amount}`);
+
   if (totalAmount > newMaxAmount) {
-    const amount = `${totalAmount}/${newMaxAmount}`;
-    $outdoorRow.find(".maxIndoorsExceed b").text(`Макс. ВБ ${amount}`);
     $outdoorRow.addClass("maxIndoorsExceed");
   } else {
     $outdoorRow.removeClass("maxIndoorsExceed");

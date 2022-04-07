@@ -387,6 +387,11 @@
     // }
   }
 
+  tr[data-type="outdoor"] .maxLoadExceed {
+    display: block;
+    border: 1px solid #000000;
+  }
+
   tr.overload {
     .overload {
       display: block;
@@ -429,8 +434,7 @@
 
   tr.maxLoadExceed {
     .maxLoadExceed {
-      display: block;
-      border: 1px solid #ff0000;
+      border-color: #ff0000;
       color: #ff0000;
     }
   }

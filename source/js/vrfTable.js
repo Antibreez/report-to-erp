@@ -15,9 +15,13 @@ function getUsefullArr(data) {
     return item.includes("Наименование");
   });
 
+  if (x === -1) return null;
+
   const y = newData[x].findIndex((item) => {
     return item.includes("Оборудование");
   });
+
+  if (y === -1) return null;
 
   amountColumnId = y + 1;
 
@@ -189,9 +193,12 @@ function getOriginalTableFromDoc(data) {
         const $title = $(`<td>${el.title}</td>`);
         const $name = $(`<td data-type="name">${el.name}</td>`);
 
-        const $oldName = $(`<td class='noExl oldName'>${el.oldIndoor ? "(" + el.oldIndoor + ")" : ""}</td>`);
+        const $oldName = $(`<td class='noExl oldName'></td>`);
         if (el.oldIndoor) {
           $oldName.text(`(${el.oldIndoor}) ${el.amount / info.systemsAmount} шт.`);
+        }
+        if (el.outdoorInitName) {
+          $oldName.text(`(${el.outdoorInitName})`);
         }
 
         const $empty = $(`<td></td>`);
@@ -221,8 +228,9 @@ function getOriginalTableFromDoc(data) {
             $row.addClass("maxIndoorsExceed");
           }
 
+          currentLoad = `${load}%`;
+
           if (load > 130) {
-            currentLoad = `${load}%`;
             $row.addClass("maxLoadExceed");
           }
 
