@@ -292,6 +292,63 @@
 
 .result__another-excel-table {
   margin-right: 25px;
+
+  button {
+    position: relative;
+    margin: 0 0 20px;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    color: blue;
+    padding-left: 30px;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      background-color: blue;
+    }
+
+    &::before {
+      width: 16px;
+      height: 2px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    &::after {
+      width: 2px;
+      height: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 7px;
+    }
+
+    span:last-child {
+      display: none;
+    }
+
+    &.opened {
+      span {
+        &:first-child {
+          display: none;
+        }
+
+        &:last-child {
+          display: inline;
+        }
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+  }
 }
 
 .result__midea-wrap {
