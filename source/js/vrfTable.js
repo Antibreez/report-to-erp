@@ -1,5 +1,5 @@
 import midea from "./midea";
-import { MIDEA_INDOORS, MIDEA_OUTDOORS } from "./midea_data";
+import { MIDEA_INDOORS, MIDEA_OUTDOORS, MIDEA_CONTROLLERS } from "./midea_data";
 import mideaEvents from "./mideaEvents";
 
 let amountColumnId = -1;
@@ -301,6 +301,21 @@ function getOriginalTableFromDoc(data) {
           $select.append($selectInner);
         }
 
+        if (el.type === "controller") {
+          const $selectInner = $(`<select class='select-controller'></select>`);
+
+          const controllers = MIDEA_CONTROLLERS;
+          Object.keys(controllers).forEach((key) => {
+            const $option = $(`
+              <option value='${controllers[key]}'>${controllers[key]}</option>
+            `);
+
+            $selectInner.append($option);
+          });
+
+          $select.append($selectInner);
+        }
+
         // const $addNewRow = $('<td class="noExl add-delete-block"></td>');
 
         // if (el.type === "indoor") {
@@ -314,6 +329,7 @@ function getOriginalTableFromDoc(data) {
             <div class="wrongType"><b>тип блока отличается от исходного</b></div>
             <div class="maxLoadExceed"><b>Загрузка ${currentLoad}</b></div>
             <div class="maxIndoorsExceed"><b>Макс. ВБ ${currentIndoors}</b></div>
+            <div class="joints"><b>Рефнеты требуют уточнения</b></div>
           </div>
         </td>`);
 

@@ -409,7 +409,8 @@
     .wrongType,
     .failedType,
     .maxIndoorsExceed,
-    .maxLoadExceed {
+    .maxLoadExceed,
+    .joints {
       display: none;
       padding: 1px 5px;
       // width: 20px;
@@ -504,7 +505,13 @@
     background-color: #ff0000;
   }
 
-  tr.joint td[data-type="name"] {
-    background-color: #ccc;
+  tr.joint {
+    background-color: #ff0000;
+  }
+
+  tr.joint .status-inner .joints {
+    display: block;
+    border: 1px solid #ff0000;
+    color: #ff0000;
   }
 }

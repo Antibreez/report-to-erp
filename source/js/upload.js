@@ -206,6 +206,13 @@ function readmultifiles(input, files) {
             //on files loading finish
             if (index === files.length - 1) {
               onLastFileLoaded();
+
+              $("html, body").animate(
+                {
+                  scrollTop: $(".result__another-excel-table").offset().top,
+                },
+                500
+              );
             }
 
             readFile(index + 1);

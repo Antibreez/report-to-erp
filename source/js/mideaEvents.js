@@ -431,6 +431,12 @@ function onOutdoorChange() {
   }
 }
 
+function onControllersChange(e) {
+  const $target = $(e.currentTarget);
+  const $name = $target.parents("td").siblings('td[data-type="name"]').first();
+  $name.text($target.val());
+}
+
 function onAddNewRow() {
   const $row = $(this).parents("tr").first();
   const $newRow = $row.clone(true);
@@ -562,11 +568,13 @@ function onRemoveRow() {
 function addEventListeners() {
   const $selectIndoor = $(".result__midea-excel-table table .select-indoor");
   const $selectOutdoor = $(".result__midea-excel-table table .select-outdoor");
+  const $selectController = $(".result__midea-excel-table table .select-controller");
   const $amountInput = $(".result__midea-excel-table table .input-amount");
   const $addBtn = $(".result__midea-excel-table table .add-new");
 
   $selectIndoor.on("change", onIndoorChange);
   $amountInput.on("focus", onAmountFocus);
+  $selectController.on("change", onControllersChange);
   $amountInput.on("blur", onAmountBlur);
   $amountInput.on("keypress", onEnterPress);
   $selectOutdoor.on("change", onOutdoorChange);
