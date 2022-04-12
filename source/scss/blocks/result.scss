@@ -445,7 +445,7 @@
     // }
   }
 
-  tr[data-type="outdoor"] .maxLoadExceed {
+  tr[data-type="outdoor"]:nth-of-type(2) .maxLoadExceed {
     display: block;
     border: 1px solid #000000;
   }

@@ -284,6 +284,7 @@ function onOutdoorChange() {
       const $newRow = $outdoorRow.clone(false, false);
       $newRow.find("td.select").empty();
       $newRow.find("td").first().empty();
+      $newRow.find("td.status").empty();
       $newRow.find('[data-type="name"]').text(key);
       $newRow.find('[data-type="amount"]').text(combinedModules[key]);
       $outdoorRow.after($newRow);
