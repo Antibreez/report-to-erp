@@ -197,6 +197,8 @@ function getOriginalTableFromDoc(data) {
         const $oldName = $(`<td class='noExl oldName'></td>`);
         if (el.oldIndoor) {
           $oldName.text(`(${el.oldIndoor}) ${el.amount / info.systemsAmount} шт.`);
+          const $label = $(`<div><span class="icon"></span><span>${el.label}</span></div>`);
+          $oldName.append($label);
         }
         // if (el.outdoorInitName) {
         //   $oldName.text(`(${el.outdoorInitName}) ${initLoad}%`);
