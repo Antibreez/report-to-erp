@@ -150,6 +150,7 @@ function getOriginalTableFromDoc(data) {
 
     const info = newSystem.info;
     const load = Math.round((info.totalIndex / info.maxIndex) * 130);
+    const initLoad = Math.round((info.oldTotalIDUIndx / info.oldOutdoorMaxIndx) * 130);
 
     if (newSystem.rows.length > 0) {
       newSystem.rows.forEach((el, idx) => {
@@ -197,9 +198,9 @@ function getOriginalTableFromDoc(data) {
         if (el.oldIndoor) {
           $oldName.text(`(${el.oldIndoor}) ${el.amount / info.systemsAmount} шт.`);
         }
-        if (el.outdoorInitName) {
-          $oldName.text(`(${el.outdoorInitName})`);
-        }
+        // if (el.outdoorInitName) {
+        //   $oldName.text(`(${el.outdoorInitName}) ${initLoad}%`);
+        // }
 
         const $empty = $(`<td></td>`);
         const $amount = $(`<td data-type='amount'>${el.amount}</td>`);
@@ -222,6 +223,8 @@ function getOriginalTableFromDoc(data) {
         if (el.type === "outdoor" && idx === 0) {
           $row.attr("data-total-indx", info.totalIndex);
           $row.attr("data-total-amount", info.totalAmount);
+
+          $oldName.text(`(${info.oldOutdoorName}) ${initLoad}%`);
 
           if (info.totalAmount > info.maxAmount) {
             currentIndoors = `${info.totalAmount}/${info.maxAmount}`;

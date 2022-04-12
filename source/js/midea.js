@@ -290,43 +290,43 @@ import { MIDEA_OUTDOORS, MIDEA_INDOORS, MIDEA_CONTROLLERS, MIDEA_PANELS, MIDEA_O
 // };
 
 const OUTDOOR_UNITS = {
-  "RXYSCQ4TV1": { unit: MIDEA_OUTDOORS.atom.units[120] },
-  "RXYSCQ5TV1": { unit: MIDEA_OUTDOORS.atom.units[140] },
-  "RXYSCQ6TV1": { unit: MIDEA_OUTDOORS.atom.units[160] },
-  "RXYSQ4T8V": { unit: MIDEA_OUTDOORS.atom.units[120] },
-  "RXYSQ5T8V": { unit: MIDEA_OUTDOORS.atom.units[140] },
-  "RXYSQ6T8V": { unit: MIDEA_OUTDOORS.atom.units[160] },
-  "RXYSQ4T8Y": { unit: MIDEA_OUTDOORS.atom.units[120] },
-  "RXYSQ5T8Y": { unit: MIDEA_OUTDOORS.atom.units[140] },
-  "RXYSQ6T8Y": { unit: MIDEA_OUTDOORS.atom.units[160] },
-  "RXYSQ8TY": { unit: MIDEA_OUTDOORS.compact.units[220] },
-  "RXYSQ10TY": { unit: MIDEA_OUTDOORS.compact.units[280] },
-  "RXYSQ12TY": { unit: MIDEA_OUTDOORS.compact.units[335] },
+  "RXYSCQ4TV1": { unit: MIDEA_OUTDOORS.atom.units[120], maxIndx: 130 },
+  "RXYSCQ5TV1": { unit: MIDEA_OUTDOORS.atom.units[140], maxIndx: 162.5 },
+  "RXYSCQ6TV1": { unit: MIDEA_OUTDOORS.atom.units[160], maxIndx: 182 },
+  "RXYSQ4T8V": { unit: MIDEA_OUTDOORS.atom.units[120], maxIndx: 130 },
+  "RXYSQ5T8V": { unit: MIDEA_OUTDOORS.atom.units[140], maxIndx: 162.5 },
+  "RXYSQ6T8V": { unit: MIDEA_OUTDOORS.atom.units[160], maxIndx: 182 },
+  "RXYSQ4T8Y": { unit: MIDEA_OUTDOORS.atom.units[120], maxIndx: 130 },
+  "RXYSQ5T8Y": { unit: MIDEA_OUTDOORS.atom.units[140], maxIndx: 162.5 },
+  "RXYSQ6T8Y": { unit: MIDEA_OUTDOORS.atom.units[160], maxIndx: 182 },
+  "RXYSQ8TY": { unit: MIDEA_OUTDOORS.compact.units[220], maxIndx: 260 },
+  "RXYSQ10TY": { unit: MIDEA_OUTDOORS.compact.units[280], maxIndx: 325 },
+  "RXYSQ12TY": { unit: MIDEA_OUTDOORS.compact.units[335], maxIndx: 390 },
   ////
-  "RXYQ8U": { unit: MIDEA_OUTDOORS.individual.units[252] },
-  "RXYQ10U": { unit: MIDEA_OUTDOORS.individual.units[280] },
-  "RXYQ12U": { unit: MIDEA_OUTDOORS.individual.units[335] },
-  "RXYQ14U": { unit: MIDEA_OUTDOORS.individual.units[400] },
-  "RXYQ16U": { unit: MIDEA_OUTDOORS.individual.units[450] },
-  "RXYQ18U": { unit: MIDEA_OUTDOORS.individual.units[500] },
-  "RXYQ20U": { unit: MIDEA_OUTDOORS.individual.units[560] },
-  "RXYQ22U": { unit: MIDEA_OUTDOORS.individual.units[615] },
-  "RXYQ24U": { unit: MIDEA_OUTDOORS.individual.units[670] },
-  "RXYQ26U": { unit: MIDEA_OUTDOORS.individual.units[730] },
-  "RXYQ28U": { unit: MIDEA_OUTDOORS.individual.units[785] },
-  "RXYQ30U": { unit: MIDEA_OUTDOORS.individual.units[850] },
-  "RXYQ32U": { unit: MIDEA_OUTDOORS.individual.units[900] },
-  "RXYQ34U": { unit: MIDEA_OUTDOORS.multi.units[950] },
-  "RXYQ36U": { unit: MIDEA_OUTDOORS.multi.units[1015] },
-  "RXYQ38U": { unit: MIDEA_OUTDOORS.multi.units[1065] },
-  "RXYQ40U": { unit: MIDEA_OUTDOORS.multi.units[1120] },
-  "RXYQ42U": { unit: MIDEA_OUTDOORS.multi.units[1175] },
-  "RXYQ44U": { unit: MIDEA_OUTDOORS.multi.units[1230] },
-  "RXYQ46U": { unit: MIDEA_OUTDOORS.multi.units[1285] },
-  "RXYQ48U": { unit: MIDEA_OUTDOORS.multi.units[1345] },
-  "RXYQ50U": { unit: MIDEA_OUTDOORS.multi.units[1400] },
-  "RXYQ52U": { unit: MIDEA_OUTDOORS.multi.units[1460] },
-  "RXYQ54U": { unit: MIDEA_OUTDOORS.multi.units[1515] },
+  "RXYQ8U": { unit: MIDEA_OUTDOORS.individual.units[252], maxIndx: 260 },
+  "RXYQ10U": { unit: MIDEA_OUTDOORS.individual.units[280], maxIndx: 325 },
+  "RXYQ12U": { unit: MIDEA_OUTDOORS.individual.units[335], maxIndx: 390 },
+  "RXYQ14U": { unit: MIDEA_OUTDOORS.individual.units[400], maxIndx: 455 },
+  "RXYQ16U": { unit: MIDEA_OUTDOORS.individual.units[450], maxIndx: 520 },
+  "RXYQ18U": { unit: MIDEA_OUTDOORS.individual.units[500], maxIndx: 585 },
+  "RXYQ20U": { unit: MIDEA_OUTDOORS.individual.units[560], maxIndx: 650 },
+  "RXYQ22U": { unit: MIDEA_OUTDOORS.individual.units[615], maxIndx: 715 },
+  "RXYQ24U": { unit: MIDEA_OUTDOORS.individual.units[670], maxIndx: 780 },
+  "RXYQ26U": { unit: MIDEA_OUTDOORS.individual.units[730], maxIndx: 845 },
+  "RXYQ28U": { unit: MIDEA_OUTDOORS.individual.units[785], maxIndx: 910 },
+  "RXYQ30U": { unit: MIDEA_OUTDOORS.individual.units[850], maxIndx: 975 },
+  "RXYQ32U": { unit: MIDEA_OUTDOORS.individual.units[900], maxIndx: 1040 },
+  "RXYQ34U": { unit: MIDEA_OUTDOORS.multi.units[950], maxIndx: 1105 },
+  "RXYQ36U": { unit: MIDEA_OUTDOORS.multi.units[1015], maxIndx: 1170 },
+  "RXYQ38U": { unit: MIDEA_OUTDOORS.multi.units[1065], maxIndx: 1235 },
+  "RXYQ40U": { unit: MIDEA_OUTDOORS.multi.units[1120], maxIndx: 1300 },
+  "RXYQ42U": { unit: MIDEA_OUTDOORS.multi.units[1175], maxIndx: 1365 },
+  "RXYQ44U": { unit: MIDEA_OUTDOORS.multi.units[1230], maxIndx: 1430 },
+  "RXYQ46U": { unit: MIDEA_OUTDOORS.multi.units[1285], maxIndx: 1495 },
+  "RXYQ48U": { unit: MIDEA_OUTDOORS.multi.units[1345], maxIndx: 1560 },
+  "RXYQ50U": { unit: MIDEA_OUTDOORS.multi.units[1400], maxIndx: 1625 },
+  "RXYQ52U": { unit: MIDEA_OUTDOORS.multi.units[1460], maxIndx: 1690 },
+  "RXYQ54U": { unit: MIDEA_OUTDOORS.multi.units[1515], maxIndx: 1755 },
 };
 
 // export const MIDEA_INDOORS = {
@@ -760,7 +760,7 @@ const CONTROLLERS = {
   "BRC4": MIDEA_CONTROLLERS.infrared,
 };
 
-function getOutdoorIndx(str) {
+function getIndxFromName(str) {
   const arr = str.split("");
 
   const idx = arr.findIndex((letter) => {
@@ -784,6 +784,8 @@ function getNewSystem(systemRows) {
   let oldTotalOutdoorIndx = 0;
   let oldOutdoorSplitName = [];
   let oldOutdoorName;
+  let oldOutdoorMaxIndx;
+  let oldTotalIDUIndx = 0;
 
   let systemsAmount = 1;
   let totalSystemIDU = 0;
@@ -814,7 +816,7 @@ function getNewSystem(systemRows) {
 
     if (outdoorUnit) {
       oldOutdoorUnits.push({ unit: row.name, amount: row.amount });
-      oldOutdoorSplitName = row.name.split(getOutdoorIndx(row.name));
+      oldOutdoorSplitName = row.name.split(getIndxFromName(row.name));
 
       row.done = true;
     }
@@ -827,7 +829,7 @@ function getNewSystem(systemRows) {
 
     oldOutdoorUnits.forEach((unit) => {
       for (let i = 0; i < unit.amount / systemsAmount; i++) {
-        oldTotalOutdoorIndx += +getOutdoorIndx(unit.unit);
+        oldTotalOutdoorIndx += +getIndxFromName(unit.unit);
       }
     });
 
@@ -836,6 +838,7 @@ function getNewSystem(systemRows) {
     newOutdoorType = OUTDOOR_UNITS[oldOutdoorName].unit.type;
     maxNewOutdoorIndx = OUTDOOR_UNITS[oldOutdoorName].unit.maxINDEX;
     maxNewOutdoorIDU = OUTDOOR_UNITS[oldOutdoorName].unit.maxIDU;
+    oldOutdoorMaxIndx = OUTDOOR_UNITS[oldOutdoorName].maxIndx;
 
     const newModules = OUTDOOR_UNITS[oldOutdoorName].unit.modules;
 
@@ -860,7 +863,8 @@ function getNewSystem(systemRows) {
           outdoorMaxIndx: OUTDOOR_UNITS[oldOutdoorName].unit.maxINDEX,
           outdoorMaxIDU: OUTDOOR_UNITS[oldOutdoorName].unit.maxIDU,
           outdoorType: OUTDOOR_UNITS[oldOutdoorName].unit.type,
-          outdoorInitName: oldOutdoorName,
+          // outdoorInitName: oldOutdoorName,
+          // outdoorInitMaxIndx: oldOutdoorMaxIndx,
         };
 
         newOutdoorRows.push(newRow);
@@ -910,6 +914,7 @@ function getNewSystem(systemRows) {
 
       totalSystemIDU += row.amount / systemsAmount;
       totalIDUIndx += indoor.unit.indx * (row.amount / systemsAmount);
+      oldTotalIDUIndx += +getIndxFromName(row.name) * (row.amount / systemsAmount);
 
       row.done = true;
 
@@ -1061,6 +1066,9 @@ function getNewSystem(systemRows) {
     maxIndex: maxNewOutdoorIndx,
     totalAmount: totalSystemIDU,
     maxAmount: maxNewOutdoorIDU,
+    oldOutdoorName,
+    oldOutdoorMaxIndx,
+    oldTotalIDUIndx,
   };
 
   return {
