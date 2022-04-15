@@ -809,6 +809,7 @@ function getNewSystem(systemRows) {
   const newControllersRows = [];
   let panels = {};
   let newOutdoorJoints = {};
+  let unknownRows = [];
 
   systemRows.forEach((row, rowIdx) => {
     const updatedOldModules = OUTDOOR_JOINTS[row.name];
@@ -840,6 +841,8 @@ function getNewSystem(systemRows) {
     });
 
     oldOutdoorName = oldOutdoorSplitName.join(oldTotalOutdoorIndx);
+
+    console.log(oldOutdoorName);
 
     newOutdoorType = OUTDOOR_UNITS[oldOutdoorName].unit.type;
     maxNewOutdoorIndx = OUTDOOR_UNITS[oldOutdoorName].unit.maxINDEX;
@@ -893,6 +896,8 @@ function getNewSystem(systemRows) {
 
   systemRows.forEach((row, rowIdx) => {
     const indoor = newOutdoorType === "atom" ? INDOORS.atom[row.name] : INDOORS.general[row.name];
+    const joint = JOINTS[row.name.slice(0, 9)];
+    const controller = CONTROLLERS[row.name.slice(0, 4)];
 
     ///START/// ===== INDOOR UNITS
     if (indoor) {
@@ -926,15 +931,7 @@ function getNewSystem(systemRows) {
       row.done = true;
 
       newIDURows.push(newRow);
-    }
-    ///END/// ===== INDOOR UNITS
-
-    ///=================================================
-
-    ///START/// ===== JOINTS
-    const joint = JOINTS[row.name.slice(0, 9)];
-
-    if (joint) {
+    } else if (joint) {
       const newRow = {
         title: "",
         name: joint,
@@ -945,23 +942,9 @@ function getNewSystem(systemRows) {
       row.done = true;
 
       newJointsRows.push(newRow);
-    }
-    ///END/// ===== JOINTS
-
-    ///=================================================
-
-    ///START/// ===== OUTDOOR JOINT
-    if (row.name.slice(0, 4) === "BHFQ") {
+    } else if (row.name.slice(0, 4) === "BHFQ") {
       row.done = true;
-    }
-    ///END/// ===== OUTDOOR JOINT
-
-    ///=================================================
-
-    ///START/// ===== CONTROLLERS
-    const controller = CONTROLLERS[row.name.slice(0, 4)];
-
-    if (controller) {
+    } else if (controller) {
       const newRow = {
         title: "",
         name: controller,
@@ -972,17 +955,22 @@ function getNewSystem(systemRows) {
       row.done = true;
 
       newControllersRows.push(newRow);
-    }
-    ///END/// ===== CONTROLLERS
-
-    ///START/// ===== PANELS
-    if (
+    } else if (
       row.name.slice(0, 4) === "BYCQ" ||
       row.name.slice(0, 4) === "BYFQ" ||
       row.name.slice(0, 4) === "BYK4" ||
       row.name.slice(0, 4) === "BYBC"
     ) {
       row.done = true;
+    } else if (!OUTDOOR_UNITS[row.name]) {
+      const newRow = {
+        title: "",
+        name: row.name,
+        amount: row.amount,
+        type: "unknown",
+      };
+
+      unknownRows.push(newRow);
     }
 
     // if (rowIdx === systemRows.length - 1) {
@@ -1057,6 +1045,10 @@ function getNewSystem(systemRows) {
     newSystemRows.push(newRow);
   });
 
+  unknownRows.forEach((row) => {
+    newSystemRows.push(row);
+  });
+
   if (newSystemRows.length > 0) {
     newSystemRows[0].title = systemRows[0].title;
   }
@@ -1076,6 +1068,7 @@ function getNewSystem(systemRows) {
     oldOutdoorName,
     oldOutdoorMaxIndx,
     oldTotalIDUIndx,
+    title: systemRows[0].title,
   };
 
   return {

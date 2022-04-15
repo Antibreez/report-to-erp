@@ -9,40 +9,83 @@ function getUsefullArr(data) {
   // console.log("#####data: ", data);
 
   const newData = removeEmptyCells(data);
-  console.log("####data: ", newData);
+
+  console.log(newData);
 
   const x = newData.findIndex((item) => {
     return item.includes("Наименование");
   });
 
+  console.log("####x ", x);
+
   if (x === -1) return null;
 
-  const y = newData[x].findIndex((item) => {
+  const z = newData.findIndex((item) => {
     return item.includes("Оборудование");
   });
 
-  if (y === -1) return null;
-
-  amountColumnId = y + 1;
-
-  const idx = newData.findIndex((item) => {
-    return item.includes("Цена");
-  });
-
-  const idx2 = newData.findIndex((item) => {
-    const id = item.findIndex((el) => {
-      if (!el) return false;
-      el += "";
-      return el.includes("Итого");
+  if (z === x) {
+    const y = newData[x].findIndex((item) => {
+      return item.includes("Оборудование");
     });
 
-    return id > -1;
-  });
+    console.log("####y ", y);
 
-  if (idx === -1 || idx2 === -1 || idx2 < idx) {
-    return null;
+    if (y === -1) return null;
+
+    amountColumnId = y + 1;
+
+    const idx = newData.findIndex((item) => {
+      return item.includes("Цена");
+    });
+
+    const idx2 = newData.findIndex((item) => {
+      const id = item.findIndex((el) => {
+        if (!el) return false;
+        el += "";
+        return el.includes("Итого");
+      });
+
+      return id > -1;
+    });
+
+    if (idx === -1 || idx2 === -1 || idx2 < idx) {
+      return null;
+    } else {
+      return newData.slice(idx + 1, idx2);
+    }
   } else {
-    return newData.slice(idx + 1, idx2);
+    const y = newData[x].findIndex((item) => {
+      return item.includes("Кол-во");
+    });
+
+    console.log("###y ", y);
+
+    if (y === -1) return null;
+
+    amountColumnId = y;
+
+    const idx = newData.findIndex((item) => {
+      return item.includes("Кол-во");
+    });
+
+    const idx2 = newData.findIndex((item) => {
+      const id = item.findIndex((el) => {
+        if (!el) return false;
+        el += "";
+        return el.includes("Итого");
+      });
+
+      return id > -1;
+    });
+
+    console.log("###idx ", idx, idx2);
+
+    if (idx === -1 || idx2 === -1 || idx2 < idx) {
+      return null;
+    } else {
+      return newData.slice(idx + 1, idx2);
+    }
   }
 }
 
@@ -51,7 +94,11 @@ function removeEmptyCells(matrix) {
 
   matrix.forEach((row) => {
     const newRow = row.filter((el) => {
-      return el;
+      if (!isNaN(el)) {
+        return Math.round(el);
+      } else {
+        return el;
+      }
     });
 
     newMatrix.push(newRow);
@@ -69,6 +116,8 @@ function getOriginalTableFromDoc(data) {
 
   const usefullArr = getUsefullArr(data);
 
+  console.log(usefullArr);
+
   if (!usefullArr) return [currentTable, newTable];
 
   usefullArr.forEach((item, idx) => {
@@ -82,7 +131,7 @@ function getOriginalTableFromDoc(data) {
     let name = "";
     let amount = "";
 
-    if (idx > 0 && usefullArr[idx - 1].length === 1) {
+    if (idx > 0 && usefullArr[idx - 1].length < 4) {
       if (system.length > 0) {
         map.push(system.slice());
         system = [];
@@ -90,10 +139,10 @@ function getOriginalTableFromDoc(data) {
 
       //$title.text(usefullArr[idx - 1][0]);
 
-      title = usefullArr[idx - 1][0];
+      title = usefullArr[idx - 1].length < 2 ? usefullArr[idx - 1][0] : usefullArr[idx - 1][1];
     }
 
-    if (item.length > 1) {
+    if (item.length > 3) {
       const nameCell = item[1];
       const amountCell = item[amountColumnId];
       // $name.text(nameCell.split(" ").slice(-1));
@@ -151,6 +200,7 @@ function getOriginalTableFromDoc(data) {
     const info = newSystem.info;
     const load = Math.round((info.totalIndex / info.maxIndex) * 130);
     const initLoad = Math.round((info.oldTotalIDUIndx / info.oldOutdoorMaxIndx) * 130);
+    let renderedTitle = false;
 
     if (newSystem.rows.length > 0) {
       newSystem.rows.forEach((el, idx) => {
@@ -158,8 +208,6 @@ function getOriginalTableFromDoc(data) {
           data-systemid='${systemIdx}'
           data-systems='${info.systemsAmount}'
         ></tr>`);
-
-        console.log("####indoorInitIndx", el.indoorInitIndx);
 
         el.type === "joint" && $row.addClass("joint");
         //el.alarm && $row.addClass(el.alarm);
@@ -191,7 +239,7 @@ function getOriginalTableFromDoc(data) {
         //   );
         // }
 
-        const $title = $(`<td>${el.title}</td>`);
+        const $title = $(`<td></td>`);
         const $name = $(`<td data-type="name">${el.name}</td>`);
 
         const $oldName = $(`<td class='noExl oldName'></td>`);
@@ -217,6 +265,10 @@ function getOriginalTableFromDoc(data) {
         if (el.type === "outdoorJoint" && el.amount === 0) {
           $row.addClass("noExl");
           $row.css("display", "none");
+        }
+
+        if (el.type === "unknown") {
+          $row.addClass("unknown");
         }
 
         let currentLoad = "";
@@ -335,8 +387,14 @@ function getOriginalTableFromDoc(data) {
             <div class="maxLoadExceed"><b>Загрузка ${currentLoad}</b></div>
             <div class="maxIndoorsExceed"><b>Макс. ВБ ${currentIndoors}</b></div>
             <div class="joints"><b>Рефнеты требуют уточнения</b></div>
+            <div class="unknown"><b>Замена не найдена</b></div>
           </div>
         </td>`);
+
+        if (!$row.hasClass("noExl") && !renderedTitle) {
+          $title.text(info.title);
+          renderedTitle = true;
+        }
 
         //$row.append($ODUstatus);
         $row.append($title);
