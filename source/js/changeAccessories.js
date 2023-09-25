@@ -2,7 +2,7 @@ import { makeTotalTable } from "./totalTable";
 
 const REFNETS_DRQ = {
   "KHRQ22M20T": "DRQ22M20T",
-  "KHRQ22M29T": "DRQ22M29T",
+  "KHRQ22M29T9": "DRQ22M29T",
   "KHRQ22M64T": "DRQ22M64T",
   "KHRQ22M75T": "DRQ22M75T",
   "KHRQ23M20T": "DRQ23M20T",
